@@ -1,0 +1,153 @@
+{
+    "Queue information": {
+        "data-file": "/Users/dmitryduev/web/sserv/telemetry/robod_status",
+        "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
+        "Project": [[9], {}, false, false],
+        "Name": [[2], {}, false, false],
+        "State": [[11], {}, false, false],
+        "Object": {
+            "RA": [[3], {}, false, false],
+            "Dec": [[4], {}, false, false],
+            "Epoch": [[5], {}, false, false],
+            "Mag": [[6], {}, false, false]
+        },
+        "Observation": {
+            "Exposure, s": [[7], {}, false, false],
+            "Filter": [[8], {}, false, false]
+        }
+    },
+    "Laser system": {
+        "data-file": "/Users/dmitryduev/web/sserv/telemetry/laser_status",
+        "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
+        "Status": [[13, 15], {"success": ["|No Fault|", "OK"], "danger": ["Error"]}, false, true],
+        "Laser diode": {
+            "T, °C": [[6], {"success": [[16, 20]], "danger": [[0, 13], [25, 50]], "warning": [[13, 16], [20, 25]]}, true, true],
+            "C, A": [[7], {"success":[[33, 34]], "warning": [[30, 33], [34, 36]], "danger": [[0, 30], [36, 50]]}, true, true],
+            "State": [[2], {"success": ["ON"], "info": ["OFF"]}, false, false]
+        },
+        "Laser": {
+            "P, W": [[5], {"success": [[10, 12]], "danger": [[0, 8]], "warning": [[8, 10]]}, true, true],
+            "Sleep": [[12], {}, false, false],
+            "Shutter": [[4], {"info": ["CLSD"]}, false, false],
+            "Interlock": [[3], {"success": ["CLSD"], "danger": ["OPEN"]}, false, false]
+        },
+        "Chiller": {
+            "T, °C": [[10], {"success": [[9, 12]], "danger": [[-1e9, 9], [15, 1e9]], "warning": [[12, 15]]}, true, true],
+            "Op, s": [[11], {"success": [[0, 10]], "danger": [[20, 32]], "warning": [[10, 20]]}, false, true],
+            "Flow": [[8], {"success": ["FLOWING"], "danger": ["NO_FLOW"]}, false, true],
+            "Reservoir": [[9], {"success": ["OK"], "danger": ["Error"]}, false, true]
+        }
+    },
+    "AO system": {
+        "data-file": "/Users/dmitryduev/web/sserv/telemetry/ao_system_status",
+        "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
+        "Focus": {
+            "Current, nm": [[17], {}, false, false],
+            "Average, nm": [[18], {}, false, false],
+            "Secondary Refocus, nm": [[21], {"success": [[-0.25, 0.25]], "danger": [[-5, -0.5, 0.5, 5]], "warning": [[-0.5, -0.25], [0.25, 0.5]]}, true, false]
+        },
+        "Average Intensity": {
+            "Intensity": [[20], {"success": [[100, 10000]], "danger": [[0, 75]], "warning": [[75, 100]]}, false, true]
+        },
+        "Deformable Mirror": {
+            "Min value": [[14], {"success": [[1000, 44000]], "danger": [[0, 100], [44900, 45000]], "warning": [[100, 1000], [44000, 44900]]}, false, false],
+            "Median value": [[16], {"success": [[1000, 44000]], "danger": [[0, 100], [44900, 45000]], "warning": [[100, 1000], [44000, 44900]]}, false, false],
+            "Max value": [[15], {"success": [[1000, 44000]], "danger": [[0, 100], [44900, 45000]], "warning": [[100, 1000], [44000, 44900]]}, false, false],
+            "r<sub>0</sub>": [[19], {}, false, false]
+        }
+    },
+    "AO loop": {
+        "data-file": "/Users/dmitryduev/web/sserv/telemetry/ao_system_status",
+        "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
+        "DM loop": {
+            "Run Time": [[2], {}, false, false],
+            "Frames": [[3], {}, false, false],
+            "Frame rate": [[4], {}, false, false],
+            "Skips": [[6], {}, false, false],
+            "Drops": [[7], {}, false, false]
+        },
+        "TT loop": {
+            "Run Time": [[8], {}, false, false],
+            "Frames": [[9], {}, false, false],
+            "Frame rate": [[10], {}, false, false],
+            "Skips": [[12], {}, false, false],
+            "Drops": [[13], {}, false, false]
+        }
+    },
+    "Tip-tilt": {
+        "data-file": "/Users/dmitryduev/web/sserv/telemetry/ao_system_status",
+        "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
+        "NGS TT Actuator Positions": {
+            "Tip-tilt 1": [[12], {"success": [[2000, 64000]], "danger": [[0, 1000], [65000, 66000]], "warning": [[1000, 2000], [64000, 65000]]}, false, false],
+            "Tip-tilt 2": [[13], {"success": [[2000, 64000]], "danger": [[0, 1000], [65000, 66000]], "warning": [[1000, 2000], [64000, 65000]]}, false, false]
+        },
+        "Laser TT Actuator Positons": {
+            "Tip-tilt 3": [[14], {"success": [[2000, 64000]], "danger": [[0, 1000], [65000, 66000]], "warning": [[1000, 2000], [64000, 65000]]}, false, false],
+            "Tip-tilt 4": [[15], {"success": [[2000, 64000]], "danger": [[0, 1000], [65000, 66000]], "warning": [[1000, 2000], [64000, 65000]]}, false, false]
+        }
+    },
+    "ADC": {
+        "data-file": "/Users/dmitryduev/web/sserv/telemetry/adcd_status",
+        "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
+        "Updating": [[3], {"success": ["YES"], "danger": ["NO"]}, false, true],
+        "Positions": {
+            "Zenith Cone": [[12], {}, false, false],
+            "Parallactic Angle, °": [[13], {}, false, false],
+            "Prism Angle, °": [[14], {}, false, false]
+        },
+        "Motors": {
+            "Axis 1, °": [[15], {}, false, false],
+            "Axis 2, °": [[16], {}, false, false]
+        },
+        "Pointing": {
+            "RA, h": [[7], {}, false, false],
+            "Dec, °": [[8], {}, false, false],
+            "HA, h": [[10], {}, false, false],
+            "Zenith angle, °": [[11], {"success": [[0, 63]], "warning": [[63, 90]]}, false, false]
+        }
+    },
+    "VIC": {
+        "data-file": "/Users/dmitryduev/web/sserv/telemetry/vicd_status",
+        "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
+        "Camera": {
+            "Status error": [[2], {}, false, true],
+            "Error": [[4], {}, false, true]
+        },
+        "Fan and cooler": {
+            "Cooler": [[5], {"success": ["ON"], "danger": ["OFF"]}, false, false],
+            "Target T, °C": [[7], {}, false, false],
+            "Current T, °C": [[6], {"success": [[-83, -77]], "danger": [[-120, -85], [-75, 50]], "warning": [[-85, -83], [-77, -75]]}, false, false],
+            "Setpoint": [[9], {"success": ["YES"], "danger": ["NO"]}, false, false],
+            "T stable": [[10], {"success": ["YES"], "danger": ["NO"]}, false, false],
+            "Fan mode": [[11], {}, false, false]
+        },
+        "Detector settings": {
+            "Gain": [[12], {}, false, false],
+            "Obs mode": [[13], {}, false, false],
+            "Amplifier": [[17], {}, false, false]
+        }
+    },
+    "TCS": {
+        "data-file": "/Users/dmitryduev/web/sserv/telemetry/tcs_status",
+        "Time stamp": [[1, 3], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
+        "Telescope": {
+            "RA, °": [[3], {}, false, false],
+            "Dec, °": [[3], {}, false, false],
+            "RA offset": [[3], {}, false, false],
+            "Dec offset": [[3], {}, false, false],
+            "Az, °": [[3], {}, false, false],
+            "El, °": [[3], {}, false, false],
+            "Moving": [[3], {}, false, false],
+            "Airmass": [[3], {}, false, false],
+            "Focus, mm": [[3], {}, false, false]
+        },
+        "Dome": {
+            "Azimuth": [[3], {}, false, false],
+            "Shutter": [[3], {}, false, false],
+            "Motion": [[3], {}, false, false]
+        },
+        "Faults": {
+            "Faults": [[11], {}, false, false]
+        }
+    }
+}
