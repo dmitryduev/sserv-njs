@@ -164,7 +164,9 @@
                                             plots[divid] = [[], g];
                                         }
                                         // date in UTC:
-                                        var t = new Date(data[key]["globals"]["Time stamp"][0] + "Z");
+                                        var t_string = data[key]["globals"]["Time stamp"][0];
+                                        var t_ = t_string.split(/[^0-9]/);
+                                        var t = new Date(Date.UTC(t_[0],t_[1]-1,t_[2],t_[3],t_[4],t_[5],t_[6]));
                                         // data point:
                                         var x = data[key]["subs"][key2][key3][0];
 
