@@ -210,8 +210,7 @@ app.get('/', function(req, res){
     //console.log(skelet);
     // create html from a template and send it to user:
     //res.sendFile('/Users/dmitryduev/web/njs/templates/index.html');
-    res.render('status.html', {host:'localhost', port:3000,
-                               skelet:skelet, layout:'one'});
+    res.render('status.html', {skelet:skelet, layout:'one'});
 });
 
 // run image page
@@ -234,8 +233,8 @@ io.on('connection', function(socket){
 
 
 // start listening
-http.listen(3000, function(){
-    console.log('listening on *:3000');
+http.listen(8080, function(){
+    console.log('listening on *:8080');
 });
 
 

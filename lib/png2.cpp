@@ -30,6 +30,7 @@ freely, subject to the following restrictions:
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cmath>
 //#include <functional>
 
 //using namespace std;
@@ -659,9 +660,9 @@ int main(int argc, char *argv[])
    //std::cout << mean << "\n";
    
    // median
-   //std::vector<double> img_sorted(img);
-   //std::sort (img_sorted.begin(), img_sorted.end());
-   //double median {img_sorted[img_sorted.size()/2]};
+   std::vector<double> img_sorted {img};
+   std::sort(img_sorted.begin(), img_sorted.end());
+   double median {img_sorted[img_sorted.size()/2.0]};
    //std::cout << median  << "\n";
   
    // vicd: generate RGB image
@@ -674,8 +675,22 @@ int main(int argc, char *argv[])
    {
      int index = y * w * 4 + x * 4;
      //grey = std::max(0.0, (img[(h-y)*h-(w-x)] - median) / (max_z) * 255);
-     grey = img[(h-y)*h-(w-x)] / (max_z) * 255;
+     // last best:
+     //grey = img[(h-y)*h-(w-x)] / (max_z) * 255;
      //std::cout << grey << "\n";
+     grey = img[(h-y)*h-(w-x)];
+     if (max_z - median > 0) {
+        if (grey > max_z) {
+            grey = max_z;
+        }
+        else if (grey < median) {
+            grey = median;
+        }
+        grey = std::sqrt((grey-median)/(max_z-median)) * 255;
+     }
+     else {
+        grey = 255;
+     }
      image[index + 0] = grey;
      image[index + 1] = grey;
      image[index + 2] = grey;

@@ -33,18 +33,18 @@
     -->
 
     <!-- WS -->
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
     <!--<script>
 
         $(document).ready(function() {
             var socket = io();
 
             socket.on('telemetry', function (msg) {
-                document.write(JSON.parse(msg));
+                document.write(msg);
             });
         });
     </script>-->
-    <script type='application/javascript'>
+    <script>
         $(document).ready(function() {
 
             var socket = io();
@@ -156,7 +156,7 @@
                                             if (plot_divs.indexOf(divid)==-1) {
                                                 $("[id='" + key + "-plots-container']").prepend( "<div id=\"" + divid +
                                                         "\" style=\"height:120px; padding:0px; margin-left:-40px;\"></div>" +
-                                                        "<hr style='margin:0 -10px 0 -10px;'>" );;
+                                                        "<hr style='margin:0 -10px 0 -10px;'>" );
                                             }
                                             // init plot:
                                             var g = plot_init(divid, divid)
@@ -166,7 +166,7 @@
                                         // date in UTC:
                                         var t_string = data[key]["globals"]["Time stamp"][0];
                                         var t_ = t_string.split(/[^0-9]/);
-                                        var t = new Date(Date.UTC(t_[0],t_[1]-1,t_[2],t_[3],t_[4],t_[5],t_[6]);
+                                        var t = new Date(Date.UTC(t_[0],t_[1]-1,t_[2],t_[3],t_[4],t_[5],t_[6]));
                                         // data point:
                                         var x = data[key]["subs"][key2][key3][0];
 
@@ -590,7 +590,7 @@
                 <br>
                 {% for system, item in skelet %}
 	 <span class="label label-default" id="{{ system }}-label"
-           style="font-size: 10px; font-weight:1; cursor:pointer;"
+           style="font-size: 10px; font-weight:200; cursor:pointer;"
            onclick="scrollTo('{{system}}')">{{system}}</span>&nbsp;
                 {% endfor %}
             </div>
