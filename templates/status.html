@@ -174,14 +174,19 @@
                                         if (plots[divid][0].length==0 ||
                                                 plots[divid][0][plots[divid][0].length-1][0].getTime()!=t.getTime()) {
                                             // save these:
-                                            plots[divid][0].push([t, x]);
+                                            plots[divid][0].push([t, parseFloat(x)]);
                                             // array too long? we're displaying the last N points only
                                             if (plots[divid][0].length > 600) {
                                                 plots[divid][0].shift();
                                             }
                                             // make/update plot:
                                             //plots[divid][1].updateSize();
-                                            plots[divid][1].updateOptions( { 'file': plots[divid][0] } )
+                                            plots[divid][1].updateOptions( { 'file': plots[divid][0] } );
+                                            // y value range ok?
+                                            var Xval = plots[divid][0].map(function(value,index) { return value[1]; });
+                                            var Xmin = Math.min.apply(null, Xval);
+                                            var Xmax = Math.max.apply(null, Xval);
+                                            plots[divid][1].updateOptions({ 'valueRange': [0.8*Xmin, 1.1*Xmax + 0.1] });
                                         }
                                     }
                                     // colorize panel face if param is critical

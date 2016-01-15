@@ -662,7 +662,7 @@ int main(int argc, char *argv[])
    // median
    std::vector<double> img_sorted {img};
    std::sort(img_sorted.begin(), img_sorted.end());
-   double median {img_sorted[img_sorted.size()/2.0]};
+   double median {img_sorted[img_sorted.size()/2]};
    //std::cout << median  << "\n";
   
    // vicd: generate RGB image
@@ -677,21 +677,24 @@ int main(int argc, char *argv[])
      //grey = std::max(0.0, (img[(h-y)*h-(w-x)] - median) / (max_z) * 255);
      // last best:
      //grey = img[(h-y)*h-(w-x)] / (max_z) * 255;
-     //std::cout << grey << "\n";
-     grey = img[(h-y)*h-(w-x)];
+     //std::cout << int(grey) << "\n";
+     int elm = img[(h-y)*h-(w-x)];
      //if (max_z - median > 0) {
         //if (grey > max_z) {
         //    grey = max_z;
         //}
         //else
-        if (grey < median/2) {
-            grey = median;
-        }
-        grey = std::sqrt((grey-median)/(max_z-median)) * 255;
+        //if (grey < median) {
+        //    grey = median;
+        //}
+        //grey = std::sqrt((grey-median)/(max_z-median)) * 255;
      //}
      //else {
      //   grey = 255;
      //}
+     //std::cout << int(grey) << " " << median << " " << max_z << " " << std::sqrt((grey-median)/(max_z-median)) << std::endl << std::endl;
+     elm < median ? grey = 0 : grey = int(std::sqrt((elm-median)/(max_z-median)) * 255);
+     //std::cout << int(grey) << std::endl << std::endl;
      image[index + 0] = grey;
      image[index + 1] = grey;
      image[index + 2] = grey;
