@@ -679,18 +679,19 @@ int main(int argc, char *argv[])
      //grey = img[(h-y)*h-(w-x)] / (max_z) * 255;
      //std::cout << grey << "\n";
      grey = img[(h-y)*h-(w-x)];
-     if (max_z - median > 0) {
-        if (grey > max_z) {
-            grey = max_z;
-        }
-        else if (grey < median) {
+     //if (max_z - median > 0) {
+        //if (grey > max_z) {
+        //    grey = max_z;
+        //}
+        //else
+        if (grey < median/2) {
             grey = median;
         }
         grey = std::sqrt((grey-median)/(max_z-median)) * 255;
-     }
-     else {
-        grey = 255;
-     }
+     //}
+     //else {
+     //   grey = 255;
+     //}
      image[index + 0] = grey;
      image[index + 1] = grey;
      image[index + 2] = grey;
