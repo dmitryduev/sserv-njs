@@ -10,9 +10,11 @@ This is how to deploy it:
 
 - Compile png generating software:
 
+```
 	cd lib
 
 	make
+```
 
 - Install node.js and npm if necessary
 
