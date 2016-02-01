@@ -20,16 +20,24 @@ This is how to deploy it:
 
 - Install app dependencies (express and socket.io):
 
+```
 	npm install
+```
 
 - Install pm2 manager:
 
+```
 	npm install pm2 -g
+```
 
 - Run the server as a daemon:
 
+```
 	pm2 start index.js
+```
 
 - To monitor performance:
 
+```
 	pm2 monit
+```
