@@ -9,7 +9,9 @@ This is how to deploy it:
 - In index.js and config.json, replace the necessary absolute paths
 
 - Compile png generating software:
+
 	cd lib
+
 	make
 
 - Install node.js and npm if necessary
