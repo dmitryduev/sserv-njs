@@ -1,6 +1,6 @@
 /*
     node.js/socket.io-based web-server for monitoring status telemetry
-
+s
     Dr. Dmitry A. Duev
     California Institute of Technology
  */
@@ -11,6 +11,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs'); // for reading local files
 var nunjucks = require('nunjucks'); // template rendering
+const exec = require('child_process').exec;
 
 // configure nunjucks
 nunjucks.configure('templates', {
@@ -24,7 +25,7 @@ nunjucks.installJinjaCompat()
 app.use('/static', express.static('public'));
 
 // get/parse config.json
-var config = require('/Users/dmitryduev/web/njs/config.json');
+var config = require('./config.json');
 
 // build a skeleton to make index.html from a template
 function skeleton(config) {
@@ -209,13 +210,13 @@ app.get('/', function(req, res){
     var skelet = skeleton(config);
     //console.log(skelet);
     // create html from a template and send it to user:
-    //res.sendFile('/Users/dmitryduev/web/njs/templates/index.html');
+    //res.sendFile('/Users/dmitryduev/web/sserv-njs/templates/index.html');
     res.render('status.html', {skelet:skelet, layout:'one'});
 });
 
 // run image page
 app.get('/image', function(req, res){
-    res.sendFile('/Users/dmitryduev/web/njs/templates/image.html');
+    res.sendFile('/Users/dmitryduev/web/sserv-njs/templates/image.html');
 });
 
 io.on('connection', function(socket){
@@ -252,3 +253,33 @@ function Loop() {
 }
 
 Loop();
+
+// Stream images
+
+var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv/telemetry';
+//var cmd = './lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status;';
+
+// telemetry streaming loop
+function LoopImg() {
+    // generate png files, then stream 'em
+    exec(cmd, function(error, stdout, stderr) {
+        // command output is in stdout
+        //console.log(stdout);
+        //console.log(stderr);
+        //console.log(error);
+        if (error == null) {
+            fs.readFile('public/dm.png', function(err, buf){
+                io.emit('dm', { image: true, buffer: buf.toString('base64') });
+            });
+            fs.readFile('public/wfs.png', function(err, buf){
+                io.emit('wfs', { image: true, buffer: buf.toString('base64') });
+            });
+            fs.readFile('public/vicd.png', function(err, buf){
+                io.emit('vicd', { image: true, buffer: buf.toString('base64') });
+            });
+        }
+    });
+    setTimeout(function() {LoopImg()}, 1000);
+}
+
+LoopImg();

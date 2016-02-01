@@ -186,7 +186,7 @@
                                             var Xval = plots[divid][0].map(function(value,index) { return value[1]; });
                                             var Xmin = Math.min.apply(null, Xval);
                                             var Xmax = Math.max.apply(null, Xval);
-                                            plots[divid][1].updateOptions({ 'valueRange': [0.8*Xmin, 1.1*Xmax + 0.1] });
+                                            plots[divid][1].updateOptions({ 'valueRange': [Xmin-0.1, Xmax+0.1] });
                                         }
                                     }
                                     // colorize panel face if param is critical

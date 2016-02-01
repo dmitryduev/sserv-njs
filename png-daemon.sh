@@ -1,5 +1,5 @@
 #!/bin/bash
-#until watch -n 0.3 ./lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv/telemetry; do
+#until watch -n 0.3 ./lib/png2 /Users/dmitryduev/web/sserv-sserv-njs/public /Users/dmitryduev/web/sserv/telemetry; do
 #    echo "'png2' crashed with exit code $?. Restarting..." >&2
 #    sleep 1
 #done
