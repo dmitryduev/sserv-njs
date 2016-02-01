@@ -4,7 +4,9 @@ This is how to deploy it:
 
 - Clone the repository:
 
+```
 	git clone https://github.com/dmitryduev/sserv-njs.git
+```
 
 - In index.js and config.json, replace the necessary absolute paths
 
