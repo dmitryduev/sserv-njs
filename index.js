@@ -13,6 +13,10 @@ var fs = require('fs'); // for reading local files
 var nunjucks = require('nunjucks'); // template rendering
 const exec = require('child_process').exec;
 
+// flavicon
+//var favicon = require('serve-favicon');
+//app.use(favicon('public/robot-favicon.png'));
+
 // configure nunjucks
 nunjucks.configure('templates', {
     autoescape: true,
@@ -64,17 +68,6 @@ function skeleton(config) {
 // Extract telemetry data
 function fetch(config) {
     var data = {};
-
-    /*
-     fs.readFile('/Users/dmitryduev/web/sserv/telemetry/vicd_status', 'utf8',
-     function (err, data) {
-     if (err) throw err;
-     var line = data.split(/[\s,]+/);
-     console.log(line);
-     console.log(line.length);
-     }
-     );
-     */
 
     // iterate over systems:
     for (var system in config) {
@@ -257,7 +250,7 @@ Loop();
 // Stream images
 
 var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv/telemetry';
-//var cmd = './lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status;';
+//var cmd = '/home/roboao/web/sserv-njs//lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status;';
 
 // telemetry streaming loop
 function LoopImg() {
