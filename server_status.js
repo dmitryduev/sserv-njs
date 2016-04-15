@@ -13,6 +13,9 @@ var fs = require('fs'); // for reading local files
 var nunjucks = require('nunjucks'); // template rendering
 const exec = require('child_process').exec;
 
+var ncp = require('ncp').ncp;
+ncp.limit = 8;
+
 // flavicon
 //var favicon = require('serve-favicon');
 //app.use(favicon('public/robot-favicon.png'));
@@ -209,7 +212,7 @@ app.get('/', function(req, res){
 
 // run image page
 app.get('/image', function(req, res){
-    res.sendFile('/Users/dmitryduev/web/sserv-njs/templates/image.html');
+    res.render('image.html');
 });
 
 io.on('connection', function(socket){
@@ -232,6 +235,24 @@ http.listen(8080, function(){
 });
 
 
+// Copy telemetry data from NFS to local disk
+// mkdir telemetry if doesn't exist
+if (!fs.existsSync('telemetry')){
+    fs.mkdirSync('telemetry');
+}
+
+function cpLoop(source, destination) {
+    ncp(source, destination, function (err) {
+        if (err) {
+            return console.error(err);
+        }
+        // console.log('done!');
+    });
+    setTimeout(function() {cpLoop(source, destination)}, 700);
+}
+cpLoop('/Users/dmitryduev/web/sserv/telemetry/', 'telemetry/');
+// cpLoop('/home/roboao/Status/', 'telemetry/');
+
 // Extract and stream telemetry data
 
 // telemetry streaming loop
@@ -249,8 +270,11 @@ Loop();
 
 // Stream images
 
-var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv/telemetry';
-//var cmd = '/home/roboao/web/sserv-njs//lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status;';
+// generate png files
+//var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv/telemetry';
+var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv-njs/telemetry';
+//var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status;';
+//var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/web/sserv-njs/telemetry;';
 
 // telemetry streaming loop
 function LoopImg() {

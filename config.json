@@ -1,6 +1,6 @@
 {
     "Queue information": {
-        "data-file": "/Users/dmitryduev/web/sserv/telemetry/robod_status",
+        "data-file": "telemetry/robod_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
         "Project": [[9], {}, false, false],
         "Name": [[2], {}, false, false],
@@ -17,7 +17,7 @@
         }
     },
     "Laser system": {
-        "data-file": "/Users/dmitryduev/web/sserv/telemetry/laser_status",
+        "data-file": "telemetry/laser_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
         "Status": [[13, 15], {"success": ["|No Fault|", "OK"], "danger": ["Error"]}, false, true],
         "Laser diode": {
@@ -39,7 +39,7 @@
         }
     },
     "AO system": {
-        "data-file": "/Users/dmitryduev/web/sserv/telemetry/ao_system_status",
+        "data-file": "telemetry/ao_system_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
         "Focus": {
             "Current, nm": [[17], {}, false, false],
@@ -57,7 +57,7 @@
         }
     },
     "AO loop": {
-        "data-file": "/Users/dmitryduev/web/sserv/telemetry/ao_system_status",
+        "data-file": "telemetry/ao_system_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
         "DM loop": {
             "Run Time": [[2], {}, false, false],
@@ -75,7 +75,7 @@
         }
     },
     "Tip-tilt": {
-        "data-file": "/Users/dmitryduev/web/sserv/telemetry/ao_system_status",
+        "data-file": "telemetry/ao_system_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
         "NGS TT Actuator Positions": {
             "Tip-tilt 1": [[12], {"success": [[2000, 64000]], "danger": [[0, 1000], [65000, 66000]], "warning": [[1000, 2000], [64000, 65000]]}, false, false],
@@ -87,7 +87,7 @@
         }
     },
     "ADC": {
-        "data-file": "/Users/dmitryduev/web/sserv/telemetry/adcd_status",
+        "data-file": "telemetry/adcd_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
         "Updating": [[3], {"success": ["YES"], "danger": ["NO"]}, false, true],
         "Positions": {
@@ -107,7 +107,7 @@
         }
     },
     "VIC": {
-        "data-file": "/Users/dmitryduev/web/sserv/telemetry/vicd_status",
+        "data-file": "telemetry/vicd_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
         "Camera": {
             "Status error": [[2], {}, false, true],
@@ -128,7 +128,7 @@
         }
     },
     "TCS": {
-        "data-file": "/Users/dmitryduev/web/sserv/telemetry/tcs_status",
+        "data-file": "telemetry/tcs_status",
         "Time stamp": [[1, 3], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, false, true],
         "Telescope": {
             "RA, °": [[3], {}, false, false],

@@ -8,7 +8,7 @@ This is how to deploy it:
 	git clone https://github.com/dmitryduev/sserv-njs.git
 ```
 
-- In index.js and config.json, replace the necessary absolute paths
+- In server_status.js and config.json, replace the necessary absolute paths
 
 - Compile png generating software:
 
@@ -20,13 +20,13 @@ This is how to deploy it:
 
 - Install node.js and npm if necessary
 
-- Install app dependencies (express and socket.io):
+- Install node.js app dependencies:
 
 ```
 	npm install
 ```
 
-- Install pm2 manager:
+- Install pm2 process manager:
 
 ```
 	npm install pm2 -g
@@ -35,7 +35,7 @@ This is how to deploy it:
 - Run the server as a daemon:
 
 ```
-	pm2 start index.js
+	pm2 start server_status.js
 ```
 
 - To monitor performance:
