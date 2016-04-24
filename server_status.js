@@ -250,7 +250,7 @@ function cpLoop(source, destination) {
     });
     setTimeout(function() {cpLoop(source, destination)}, 700);
 }
-cpLoop('/Users/dmitryduev/web/sserv/telemetry/', 'telemetry/');
+// cpLoop('/Users/dmitryduev/web/sserv/telemetry/', 'telemetry/');
 // cpLoop('/home/roboao/Status/', 'telemetry/');
 
 // Extract and stream telemetry data
