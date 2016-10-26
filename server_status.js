@@ -1,6 +1,6 @@
 /*
     node.js/socket.io-based web-server for monitoring status telemetry
-s
+
     Dr. Dmitry A. Duev
     California Institute of Technology
  */
