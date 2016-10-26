@@ -82,14 +82,14 @@
                                 document.getElementById(key + ":" + key2).className =
                                         data[key]["globals"][key2][1];
                                 // log if something turned red or yellow
-                                if ((tmp_col != "danger" &&
-                                        data[key]["globals"][key2][1] == "danger") ||
-                                        (tmp_col != "warning" &&
-                                        data[key]["globals"][key2][1] == "warning")) {
-                                    logit(data[key]["globals"][key2][1],
-                                            key+":"+key2+ "<br>" +
-                                            tmp_val + " -> " + data[key]["globals"][key2][0]);
-                                }
+//                                if ((tmp_col != "danger" &&
+//                                        data[key]["globals"][key2][1] == "danger") ||
+//                                        (tmp_col != "warning" &&
+//                                        data[key]["globals"][key2][1] == "warning")) {
+//                                    logit(data[key]["globals"][key2][1],
+//                                            key+":"+key2+ "<br>" +
+//                                            tmp_val + " -> " + data[key]["globals"][key2][0]);
+//                                }
 
                                 // TODO: here come the plots
 
@@ -132,14 +132,14 @@
                                     document.getElementById(key+":"+key2+":"+key3).className =
                                             data[key]["subs"][key2][key3][1];
                                     // log if something turned red or yellow
-                                    if ((tmp_col != "danger" &&
-                                            data[key]["subs"][key2][key3][1] == "danger") ||
-                                            (tmp_col != "warning" &&
-                                            data[key]["subs"][key2][key3][1] == "warning")) {
-                                        logit(data[key]["subs"][key2][key3][1],
-                                                key+":"+key2+":"+key3 + "<br>" +
-                                                tmp_val + " -> " + data[key]["subs"][key2][key3][0]);
-                                    }
+//                                    if ((tmp_col != "danger" &&
+//                                            data[key]["subs"][key2][key3][1] == "danger") ||
+//                                            (tmp_col != "warning" &&
+//                                            data[key]["subs"][key2][key3][1] == "warning")) {
+//                                        logit(data[key]["subs"][key2][key3][1],
+//                                                key+":"+key2+":"+key3 + "<br>" +
+//                                                tmp_val + " -> " + data[key]["subs"][key2][key3][0]);
+//                                    }
                                     // plot stuff if set in config.json
                                     if (data[key]["subs"][key2][key3][2]) {
                                         // make sure the dropdown toggle for the plots part of panel is displayed:
@@ -368,7 +368,7 @@
     <div class="row" style="height: 100%; display: table-row;">
 
         <!-- Status data -->
-        <div class="col-md-10" style="height:100%; display:table-cell;">
+        <div class="col-md-12" style="height:100%; width:99%; display:table-cell;">
             <div class="page-header">
                 <br>
                 <h3>Robo-AO status</h3>
@@ -391,7 +391,7 @@
             <div class="row">
 
                 <!-- System -->
-                <div class="col-md-12 col-sm-9">
+                <div class="col-md-12 col-sm-12">
                     <!-- <div class="panel panel-default" style="display:none;" id="{{ system }}"> -->
                     <div class="panel panel-default" style="display:block;" id="{{ system }}">
                         <div class="panel-heading panel-heading-sm">
@@ -579,14 +579,14 @@
 
 
             <!-- Log -->
-            <div id="col-log" class="col-md-2" style="background:#0f1420;
-            color:#999; overflow: auto;
-            height: 100vh; position: fixed; right: 0px;">
-                <br><br><br><br>
-                <div id="log">
-                    <!-- Log placeholder. Tell operator if something turns yellow or red -->
-                </div>
-            </div>
+            <!--<div id="col-log" class="col-md-2" style="background:#0f1420;-->
+            <!--color:#999; overflow: auto;-->
+            <!--height: 100vh; position: fixed; right: 0px;">-->
+                <!--<br><br><br><br>-->
+                <!--<div id="log">-->
+                    <!--&lt;!&ndash; Log placeholder. Tell operator if something turns yellow or red &ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
 
             <!-- Colored labels -->
             <div id="col-log-2" style="background:#0f1420;
