@@ -147,7 +147,7 @@ function fetch(config) {
                     // get 'critical' switch:
                     var critical_switch = config[system][key][3];
                     data[system]['globals'][key] = [data[system]['globals'][key],
-                        color_code, plot_switch, critical_switch];
+                        color_code, plot_switch, plot_length, plot_time_scale, critical_switch];
                 }
                 else {
                     data[system]['subs'][key] = {};
@@ -192,7 +192,7 @@ function fetch(config) {
                         // get 'critical' switch:
                         var critical_switch = config[system][key][key2][3];
                         data[system]['subs'][key][key2] = [data[system]['subs'][key][key2],
-                            color_code, plot_switch, critical_switch];
+                            color_code, plot_switch, plot_length, plot_time_scale, critical_switch];
                     }
                 }
 
