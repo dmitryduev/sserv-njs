@@ -116,7 +116,7 @@
         "Fan and cooler": {
             "Cooler": [[5], {"success": ["ON"], "danger": ["OFF"]}, [false], false],
             "Target T, °C": [[7], {}, [false], false],
-            "Current T, °C": [[6], {"success": [[-83, -77]], "danger": [[-120, -85], [-75, 50]], "warning": [[-85, -83], [-77, -75]]}, [false], false],
+            "Current T, °C": [[6], {"success": [[-83, -77]], "danger": [[-120, -85], [-75, 50]], "warning": [[-85, -83], [-77, -75]]}, [true, 600, "local"], true],
             "Setpoint": [[9], {"success": ["YES"], "danger": ["NO"]}, [false], false],
             "T stable": [[10], {"success": ["YES"], "danger": ["NO"]}, [false], false],
             "Fan mode": [[11], {}, [false], false]
