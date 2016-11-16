@@ -94,7 +94,7 @@
                                 // TODO: here come the plots
 
                                 // colorize panel face if param is critical
-                                if (data[key]["globals"][key2][3]) { // critical?
+                                if (data[key]["globals"][key2][5]) { // critical?
                                     switch (panel_color) {
                                         case "default":
                                             panel_color = data[key]["globals"][key2][1];
@@ -161,7 +161,7 @@
                                                         "<hr style='margin:0 -10px 0 -10px;'>" );
                                             }
                                             // init plot:
-                                            var g = plot_init(divid, divid)
+                                            var g = plot_init(divid, divid, data[key]["subs"][key2][key3][4]);
                                             // keep it in a dark and dry place:
                                             plots[divid] = [[], g];
                                         }
@@ -178,7 +178,7 @@
                                             // save these:
                                             plots[divid][0].push([t, parseFloat(x)]);
                                             // array too long? we're displaying the last N points only
-                                            if (plots[divid][0].length > 600) {
+                                            if (plots[divid][0].length > data[key]["subs"][key2][key3][3]) {
                                                 plots[divid][0].shift();
                                             }
                                             // make/update plot:
@@ -192,7 +192,7 @@
                                         }
                                     }
                                     // colorize panel face if param is critical
-                                    if (data[key]["subs"][key2][key3][3]) { // critical?
+                                    if (data[key]["subs"][key2][key3][5]) { // critical?
                                         switch (panel_color) {
                                             case "default":
                                                 panel_color = data[key]["subs"][key2][key3][1];
@@ -289,15 +289,16 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
 
     <script>
-        function plot_init(divid, yname) {
+        function plot_init(divid, yname, utc_local) {
             var g = new Dygraph(document.getElementById(divid), [],
-                    {
-                        drawPoints: true,
-                        //ylabel: yname,
-                        title: yname,
-//                            valueRange: [0.0, 1.2],
-                        labels: ['Time', yname]
-                    });
+                {
+                    drawPoints: true,
+                    //ylabel: yname,
+                    title: yname,
+//                    valueRange: [0.0, 1.2],
+                    labels: ['Time', yname],
+                    labelsUTC: utc_local == 'UTC'
+                });
             return g;
         }
     </script>

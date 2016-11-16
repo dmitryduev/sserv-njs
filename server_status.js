@@ -136,7 +136,14 @@ function fetch(config) {
                     }
 
                     // get plotting switch:
-                    var plot_switch = config[system][key][2];
+                    var plot_switch = config[system][key][2][0];
+                    var plot_length = 600;
+                    var plot_time_scale = "UTC";
+                    // number of points and time scale set?
+                    if (config[system][key][2].length > 1) {
+                        plot_length = config[system][key][2][1];
+                        plot_time_scale = config[system][key][2][2];
+                    }
                     // get 'critical' switch:
                     var critical_switch = config[system][key][3];
                     data[system]['globals'][key] = [data[system]['globals'][key],
@@ -174,7 +181,14 @@ function fetch(config) {
                         }
 
                         // get plotting switch:
-                        var plot_switch = config[system][key][key2][2];
+                        var plot_switch = config[system][key][key2][2][0];
+                        var plot_length = 600;
+                        var plot_time_scale = "UTC";
+                        // number of points and time scale set?
+                        if (config[system][key][key2][2].length > 1) {
+                            plot_length = config[system][key][key2][2][1];
+                            plot_time_scale = config[system][key][key2][2][2];
+                        }
                         // get 'critical' switch:
                         var critical_switch = config[system][key][key2][3];
                         data[system]['subs'][key][key2] = [data[system]['subs'][key][key2],
