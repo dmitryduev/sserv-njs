@@ -26,13 +26,22 @@ nunjucks.configure('templates', {
     express: app
 });
 // make it more pythonic
-nunjucks.installJinjaCompat()
+nunjucks.installJinjaCompat();
 
 // serve static files:
 app.use('/static', express.static('public'));
 
 // get/parse config.json
-var config = require('./config.json');
+var config_file = './config.json';
+if (process.argv.length > 2) {
+    if (process.argv[2][0] != '/' && process.argv[2][0] != '.') {
+        config_file = './' + process.argv[2];
+    }
+    else {
+        config_file = process.argv[2]
+    }
+}
+var config = require(config_file);
 
 // build a skeleton to make index.html from a template
 function skeleton(config) {
@@ -286,8 +295,8 @@ Loop();
 
 // generate png files
 //var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv/telemetry';
-var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv-njs/telemetry';
-//var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status;';
+//var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv-njs/telemetry';
+var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status;';
 //var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/web/sserv-njs/telemetry;';
 
 // telemetry streaming loop

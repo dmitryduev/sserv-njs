@@ -1,6 +1,6 @@
 {
     "Queue information": {
-        "data-file": "telemetry/robod_status",
+        "data-file": "/home/roboao/Status/robod_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
         "Project": [[9], {}, [false], false],
         "Name": [[2], {}, [false], false],
@@ -17,7 +17,7 @@
         }
     },
     "Laser system": {
-        "data-file": "telemetry/laser_status",
+        "data-file": "/home/roboao/Status/laser_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
         "Status": [[13, 15], {"success": ["|No Fault|", "OK"], "danger": ["Error"]}, [false], true],
         "Laser diode": {
@@ -39,7 +39,7 @@
         }
     },
     "AO system": {
-        "data-file": "telemetry/ao_system_status",
+        "data-file": "/home/roboao/Status/ao_system_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
         "Focus": {
             "Current, nm": [[17], {}, [false], false],
@@ -57,7 +57,7 @@
         }
     },
     "AO loop": {
-        "data-file": "telemetry/ao_system_status",
+        "data-file": "/home/roboao/Status/ao_system_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
         "DM loop": {
             "Run Time": [[2], {}, [false], false],
@@ -75,7 +75,7 @@
         }
     },
     "Tip-tilt": {
-        "data-file": "telemetry/ao_system_status",
+        "data-file": "/home/roboao/Status/ao_system_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
         "NGS TT Actuator Positions": {
             "Tip-tilt 1": [[12], {"success": [[2000, 64000]], "danger": [[0, 1000], [65000, 66000]], "warning": [[1000, 2000], [64000, 65000]]}, [false], false],
@@ -87,7 +87,7 @@
         }
     },
     "ADC": {
-        "data-file": "telemetry/adcd_status",
+        "data-file": "/home/roboao/Status/adcd_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
         "Updating": [[3], {"success": ["YES"], "danger": ["NO"]}, [false], true],
         "Positions": {
@@ -107,7 +107,7 @@
         }
     },
     "VIC": {
-        "data-file": "telemetry/vicd_status",
+        "data-file": "/home/roboao/Status/vicd_status",
         "Time stamp": [[0, 2], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
         "Camera": {
             "Status error": [[2], {}, [false], true],
@@ -128,26 +128,40 @@
         }
     },
     "TCS": {
-        "data-file": "telemetry/tcs_status",
+        "data-file": "/home/roboao/Status/tcs_status",
         "Time stamp": [[1, 3], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
         "Telescope": {
-            "RA, °": [[3], {}, [false], false],
-            "Dec, °": [[3], {}, [false], false],
-            "RA offset": [[3], {}, [false], false],
-            "Dec offset": [[3], {}, [false], false],
-            "Az, °": [[3], {}, [false], false],
-            "El, °": [[3], {}, [false], false],
-            "Moving": [[3], {}, [false], false],
-            "Airmass": [[3], {}, [false], false],
-            "Focus, mm": [[3], {}, [false], false]
+            "Initialized": [[4], {}, [false], false],
+            "State": [[5], {}, [false], false],
+            "Power": [[6], {}, [false], false],
+            "Error": [[7], {}, [false], false],
+            "LST": [[9], {}, [false], false],
+            "RA, °": [[10], {}, [false], false],
+            "Dec, °": [[12], {}, [false], false],
+            "RA offset": [[22], {}, [false], false],
+            "Dec offset": [[23], {}, [false], false],
+            "RA rate": [[24], {}, [false], false],
+            "Dec rate": [[25], {}, [false], false],
+            "HA": [[14], {}, [false], false],
+            "Az, °": [[15], {}, [false], false],
+            "El, °": [[16], {}, [false], false],
+            "Moving": [[17], {}, [false], false],
+            "Airmass": [[18], {}, [false], false],
+            "Focus, mm": [[26], {}, [false], false]
         },
         "Dome": {
-            "Azimuth": [[3], {}, [false], false],
-            "Shutter": [[3], {}, [false], false],
-            "Motion": [[3], {}, [false], false]
+            "Azimuth": [[19], {}, [false], false],
+            "Shutter": [[20], {}, [false], false],
+            "Motion": [[21], {}, [false], false]
         },
-        "Faults": {
-            "Faults": [[11], {}, [false], false]
+        "Mirror": {
+            "Open": [[28], {}, [false], false],
+            "Moving": [[29], {}, [false], false]
+        },
+        "Fans": {
+            "Building": [[30], {}, [false], false],
+            "Telescope": [[31], {}, [false], false],
+            "Woffer": [[32], {}, [false], false]
         }
     }
 }
