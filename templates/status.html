@@ -36,16 +36,7 @@
 
     <!-- WS -->
     <script src="https://cdn.socket.io/socket.io-1.4.3.js"></script>
-    <!--<script>
 
-        $(document).ready(function() {
-            var socket = io();
-
-            socket.on('telemetry', function (msg) {
-                document.write(msg);
-            });
-        });
-    </script>-->
     <script>
         $(document).ready(function() {
 
@@ -77,10 +68,10 @@
                                 var tmp_col = document.getElementById(key+":"+key2).className;
                                 // value:
                                 document.getElementById(key + ":" + key2).innerHTML =
-                                        data[key]["globals"][key2][0];
+                                    data[key]["globals"][key2][0];
                                 // color:
                                 document.getElementById(key + ":" + key2).className =
-                                        data[key]["globals"][key2][1];
+                                    data[key]["globals"][key2][1];
                                 // log if something turned red or yellow
 //                                if ((tmp_col != "danger" &&
 //                                        data[key]["globals"][key2][1] == "danger") ||
@@ -101,7 +92,7 @@
                                             break;
                                         case "success":
                                             if (data[key]["globals"][key2][1]=="danger" ||
-                                                    data[key]["globals"][key2][1]=="warning") {
+                                                data[key]["globals"][key2][1]=="warning") {
                                                 panel_color = data[key]["globals"][key2][1];
                                             }
                                             break;
@@ -127,10 +118,10 @@
                                     tmp_col = document.getElementById(key+":"+key2+":"+key3).className;
                                     // value:
                                     document.getElementById(key+":"+key2+":"+key3).innerHTML =
-                                            data[key]["subs"][key2][key3][0];
+                                        data[key]["subs"][key2][key3][0];
                                     // color:
                                     document.getElementById(key+":"+key2+":"+key3).className =
-                                            data[key]["subs"][key2][key3][1];
+                                        data[key]["subs"][key2][key3][1];
                                     // log if something turned red or yellow
 //                                    if ((tmp_col != "danger" &&
 //                                            data[key]["subs"][key2][key3][1] == "danger") ||
@@ -157,8 +148,8 @@
                                             // no? i can haz div?
                                             if (plot_divs.indexOf(divid)==-1) {
                                                 $("[id='" + key + "-plots-container']").prepend( "<div id=\"" + divid +
-                                                        "\" style=\"height:120px; padding:0px; margin-left:-40px;\"></div>" +
-                                                        "<hr style='margin:0 -10px 0 -10px;'>" );
+                                                    "\" style=\"height:120px; padding:0px; margin-left:-40px;\"></div>" +
+                                                    "<hr style='margin:0 -10px 0 -10px;'>" );
                                             }
                                             // init plot:
                                             var g = plot_init(divid, divid, data[key]["subs"][key2][key3][4]);
@@ -174,7 +165,7 @@
 
                                         // check if the current t is not in there already
                                         if (plots[divid][0].length==0 ||
-                                                plots[divid][0][plots[divid][0].length-1][0].getTime()!=t.getTime()) {
+                                            plots[divid][0][plots[divid][0].length-1][0].getTime()!=t.getTime()) {
                                             // save these:
                                             plots[divid][0].push([t, parseFloat(x)]);
                                             // array too long? we're displaying the last N points only
@@ -199,7 +190,7 @@
                                                 break;
                                             case "success":
                                                 if (data[key]["subs"][key2][key3][1]=="danger" ||
-                                                        data[key]["subs"][key2][key3][1]=="warning") {
+                                                    data[key]["subs"][key2][key3][1]=="warning") {
                                                     panel_color = data[key]["subs"][key2][key3][1];
                                                 }
                                                 break;
@@ -232,19 +223,19 @@
         function showHidePlots(key) {
             if ($("[id='" + key + "-dropdown']").children("span").attr("class") == "glyphicon glyphicon-menu-up") {
                 $("[id='" + key + "-dropdown']").children("span").attr("class",
-                        "glyphicon glyphicon-menu-down");
+                    "glyphicon glyphicon-menu-down");
                 document.getElementById(key+"-plots").style.display = "none";
             }
             else { if ($("[id='" + key + "-dropdown']").children("span").attr("class") == "glyphicon glyphicon-menu-down") {
                 $("[id='" + key + "-dropdown']").children("span").attr("class",
-                        "glyphicon glyphicon-menu-up");
+                    "glyphicon glyphicon-menu-up");
                 document.getElementById(key+"-plots").style.display = "block";
             } }
         }
         // minimize plots on body load
         $( window ).load(setTimeout(function() {
             {% for system, item in skelet %}
-            showHidePlots("{{system}}");
+                showHidePlots("{{system}}");
             {% endfor %}
         }, 2000));
     </script>
@@ -269,7 +260,7 @@
             }
             // publish:
             $('#log').prepend("<p class=\"" + log_class + "\">"
-                    + timestamp.toLocaleString() + "<br>" + text + "</p>");
+                + timestamp.toLocaleString() + "<br>" + text + "</p>");
             // to beep or not to beep?
             //beep(color);
         }
@@ -359,254 +350,123 @@
 
 <body role="document" style="padding-top:0px; padding-bottom:0px; margin-bottom:0px">
 
-<!--
-<audio id="beep-warning" src="http://www.soundjay.com/button/beep-22.wav"></audio>
-<audio id="beep-danger" src="http://www.soundjay.com/button/beep-07.wav"></audio>
--->
+    <div class="container" role="main">
 
-<div class="container-fluid theme-showcase" role="main">
+        <div class="row">
 
-    <div class="row" style="height: 100%; display: table-row;">
-
-        <!-- Status data -->
-        <div class="col-md-12" style="height:100%; width:99%; display:table-cell;">
-            <div class="page-header">
-                <br>
-                <h3>Robo-AO status</h3>
-            </div>
-
-            <!--
-            <form action='#' id='chatform' method='get'>
-            <textarea id='chat' cols='35' rows='10'></textarea>
-            <br>
-            <label for='message'></label><input type='text' id='message' />
-            <input id='send' type='submit' value='Send' />
-            </form>
-            <br>
-            -->
-
-            <!-- Panels 1 in a row -->
-            {% if layout=='one' %}
-
-            {% for system, item in skelet %}
-            <div class="row">
-
-                <!-- System -->
-                <div class="col-md-12 col-sm-12">
-                    <!-- <div class="panel panel-default" style="display:none;" id="{{ system }}"> -->
-                    <div class="panel panel-default" style="display:block;" id="{{ system }}">
-                        <div class="panel-heading panel-heading-sm">
-                            <h3 class="panel-title">{{system}}</h3>
-                            <div class="pull-right" style="display:none; cursor:pointer;
-                cursor:hand; margin-top:-12px;" id="{{system}}-dropdown"
-                                 onClick="showHidePlots('{{system}}')" aria-label="plots">
-                                <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
-                            </div>
-                        </div>
-                        <div class="panel-body panel-body-sm">
-
-                            <table class="table table-condensed" style="margin-bottom:5px">
-                                <thead>
-
-                                <tr>
-                                    {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                    <th colspan="{{ skelet[system]['globals'].keys()|length() }}"></th>
-                                    {% endif %}
-                                    {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['subs'] %}
-                                    <th colspan="{{ skelet[system]['subs'][key].keys()|length() }}" style="text-align: center;">{{ key }}</th>
-                                    {% endfor %}
-                                    {% endif %}
-                                </tr>
-
-                                <tr>
-                                    {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['globals'] %}
-                                    <th>{{ key }}</th>
-                                    {% endfor %}
-                                    {% endif %}
-                                    {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['subs'] %}
-                                    {% for key2, item in skelet[system]['subs'][key] %}
-                                    <th>{{ key2 }}</th>
-                                    {% endfor %}
-                                    {% endfor %}
-                                    {% endif %}
-                                </tr>
-
-                                </thead>
-
-                                <tbody>
-                                <tr>
-                                    <!-- Global params -->
-                                    {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['globals'] %}
-                                    <td id="{{system}}:{{key}}"></td>
-                                    {% endfor %}
-                                    {% endif %}
-
-                                    <!-- Data Tables  -->
-                                    {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['subs'] %}
-                                    {% for key2, item in skelet[system]['subs'][key] %}
-                                    <td id="{{system}}:{{key}}:{{key2}}"></td>
-                                    {% endfor %}
-                                    {% endfor %}
-                                    {% endif %}
-
-                                </tr>
-                                </tbody>
-
-                            </table>
-
-
-                            <hr style="margin:0 -10px 0 -10px;">
-
-                            <!-- Real time charts -->
-                            <div style="display:block;" id="{{system}}-plots">
-                                <!--<hr style="margin:0 -10px 0 -10px;">-->
-                                <div id="{{system}}-plots-container">
-                                    <!-- Placeholder for da plots -->
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+            <!-- Status data -->
+            <div class="col-md-12">
+                <div class="page-header">
+                    <br>
+                    <h3>Robo-AO status</h3>
                 </div>
 
+                {% for system, item in skelet %}
 
-            </div>
+                <!-- System -->
+                <!-- <div class="panel panel-default" style="display:none;" id="{{ system }}"> -->
+                <div class="panel panel-default" style="display:block;" id="{{ system }}">
+                    <div class="panel-heading panel-heading-sm">
+                        <h3 class="panel-title">{{system}}</h3>
+                        <div class="pull-right" style="display:none; cursor:pointer;
+                    cursor:hand; margin-top:-12px;" id="{{system}}-dropdown"
+                             onClick="showHidePlots('{{system}}')" aria-label="plots">
+                            <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                    <div class="panel-body panel-body-sm">
 
-            {% endfor %}
+                        <table class="table table-condensed table-responsive" style="margin-bottom:5px">
+                            <thead>
 
-            {% endif %}
+                            <tr>
+                                {% if skelet[system]['globals'].keys()|length() > 0 %}
+                                    <th colspan="{{ skelet[system]['globals'].keys()|length() }}"></th>
+                                {% endif %}
+                                {% if skelet[system]['subs'].keys()|length() > 0 %}
+                                    {% for key, item in skelet[system]['subs'] %}
+                                        <th colspan="{{ skelet[system]['subs'][key].keys()|length() }}"
+                                            style="text-align: center;">{{ key }}</th>
+                                    {% endfor %}
+                                {% endif %}
+                            </tr>
 
+                            <tr>
+                                {% if skelet[system]['globals'].keys()|length() > 0 %}
+                                    {% for key, item in skelet[system]['globals'] %}
+                                        <th>{{ key }}</th>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if skelet[system]['subs'].keys()|length() > 0 %}
+                                    {% for key, item in skelet[system]['subs'] %}
+                                        {% for key2, item in skelet[system]['subs'][key] %}
+                                            <th>{{ key2 }}</th>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
+                            </tr>
 
+                            </thead>
 
-            <!-- Panels 3 in a row -->
-            {% if layout=='three' %}
-
-            {% for system in skelet %}
-            {% if (loop.index-1) % 3 == 0 %}
-            <div class="row">
-                {% elif loop.index == 1  %}
-                <div class="row">
-                    {% endif %}
-
-                    <!-- Systems -->
-                    <div class="col-sm-4">
-                        <!-- <div class="panel panel-default" style="display:none;" id="{{ system }}"> -->
-                        <div class="panel panel-default" style="display:block;" id="{{ system }}">
-                            <div class="panel-heading panel-heading-sm">
-                                <h3 class="panel-title">{{system}}</h3>
-                                <div class="pull-right" style="display:none; cursor:pointer;
-                cursor:hand; margin-top:-12px;" id="{{system}}-dropdown"
-                                     onClick="showHidePlots('{{system}}')" aria-label="plots">
-                                    <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
-                                </div>
-                            </div>
-                            <div class="panel-body panel-body-sm">
-
+                            <tbody>
+                            <tr>
                                 <!-- Global params -->
                                 {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                <!-- <hr style="margin:0 -10px 0 -10px;"> -->
-                                <table class="table table-condensed" style="margin-bottom:5px">
-                                    <thead>
                                     {% for key, item in skelet[system]['globals'] %}
-                                    <th>{{ key }}</th>
-                                    {% endfor %}
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        {% for key, item in skelet[system]['globals'] %}
                                         <td id="{{system}}:{{key}}"></td>
-                                        {% endfor %}
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <!-- <hr style="margin:0 -10px 0 -10px;"> -->
+                                    {% endfor %}
                                 {% endif %}
-
 
                                 <!-- Data Tables  -->
                                 {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                {% for key, item in skelet[system]['subs'] %}
-                                <!--<hr style="margin:0 -10px 0 -10px;">-->
-                                <table class="table table-condensed" style="margin-bottom:5px">
-                                    <thead>
-                                    <th></th>
-                                    {% for key2, item in skelet[system]['subs'][key] %}
-                                    <th>{{ key2 }}</th>
-                                    {% endfor %}
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <th scope="row">{{ key }}</th>
+                                    {% for key, item in skelet[system]['subs'] %}
                                         {% for key2, item in skelet[system]['subs'][key] %}
-                                        <td id="{{system}}:{{key}}:{{key2}}"></td>
+                                            <td id="{{system}}:{{key}}:{{key2}}"></td>
                                         {% endfor %}
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <hr style="margin:0 -10px 0 -10px;">
-                                {% endfor %}
+                                    {% endfor %}
                                 {% endif %}
 
-                                <!-- Real time charts -->
-                                <div style="display:block;" id="{{system}}-plots">
-                                    <!--<hr style="margin:0 -10px 0 -10px;">-->
-                                    <div id="{{system}}-plots-container">
-                                        <!-- Placeholder for da plots -->
-                                    </div>
-                                </div>
+                            </tr>
+                            </tbody>
 
+                        </table>
+
+
+                        <hr style="margin:0 -10px 0 -10px;">
+
+                        <!-- Real time charts -->
+                        <div style="display:block;" id="{{system}}-plots">
+                            <!--<hr style="margin:0 -10px 0 -10px;">-->
+                            <div id="{{system}}-plots-container">
+                                <!-- Placeholder for da plots -->
                             </div>
                         </div>
+
                     </div>
-
-
-                    {% if loop.index % 3 == 0 or loop.index == skelet.keys()|length() %}
                 </div>
-                {% endif %}
-
 
                 {% endfor %}
-
-                {% endif %}
 
                 <br><br>
 
             </div>
 
-
-            <!-- Log -->
-            <!--<div id="col-log" class="col-md-2" style="background:#0f1420;-->
-            <!--color:#999; overflow: auto;-->
-            <!--height: 100vh; position: fixed; right: 0px;">-->
-                <!--<br><br><br><br>-->
-                <!--<div id="log">-->
-                    <!--&lt;!&ndash; Log placeholder. Tell operator if something turns yellow or red &ndash;&gt;-->
-                <!--</div>-->
-            <!--</div>-->
-
             <!-- Colored labels -->
             <div id="col-log-2" style="background:#0f1420;
-            color:#999; z-index:200; overflow-y: scroll; overflow-x: hidden;
-            border-top: solid white 2px;
-            height: 28px; width:100%; position: fixed; right: 0px; bottom:0px;
-            padding: 0 0 0 5px; margin:0px; line-height:0.8;">
+                color:#999; z-index:200; overflow-y: scroll; overflow-x: hidden;
+                border-top: solid white 2px;
+                height: 28px; width:100%; position: fixed; right: 0px; bottom:0px;
+                padding: 0 0 0 5px; margin:0px; line-height:0.8;">
                 <br>
                 {% for system, item in skelet %}
-	 <span class="label label-default" id="{{ system }}-label"
-           style="font-size: 10px; font-weight:200; cursor:pointer;"
-           onclick="scrollTo('{{system}}')">{{system}}</span>&nbsp;
+                    <span class="label label-default" id="{{ system }}-label"
+                          style="font-size: 10px; font-weight:200; cursor:pointer;"
+                          onclick="scrollTo('{{system}}')">{{system}}</span>&nbsp;
                 {% endfor %}
             </div>
 
         </div>
     </div>
 
-
 </body>
-
 </html>

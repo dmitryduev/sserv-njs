@@ -35,6 +35,28 @@
     <script src="//oss.maxcdn.com/bootbox/4.4.0/bootbox.min.js"></script>
     -->
 
+    <script>
+        // show/hide box
+        function showHideBox() {
+
+            if ($("#bx").css('display') != "none") {
+                $("#bx").fadeOut();
+            }
+            else {
+                $("#bx").fadeIn();
+            }
+        }
+
+        var vicd_toggle = true;
+        function canvas_vicd_click() {
+            // show field center:
+            showHideBox();
+            // show IR camera box
+//            vicd_toggle = (vicd_toggle == true) ? false : true;
+            vicd_toggle = (vicd_toggle != true);
+        }
+    </script>
+
     <!-- WS -->
     <script src="https://cdn.socket.io/socket.io-1.4.3.js"></script>
     <script>
@@ -61,6 +83,8 @@
             ctx_vicd.webkitImageSmoothingEnabled = false;
             ctx_vicd.msImageSmoothingEnabled = false;
 
+            // enable onclick event:
+
             var socket = io();
 
             socket.on('dm', function (info) {
@@ -83,28 +107,53 @@
 
             socket.on('vicd', function (info) {
                 if (info.image) {
+                    var VIC_width = ctx_vicd.canvas.clientWidth;  // this is 36 arcsec
+                    var VIC_height = ctx_vicd.canvas.clientHeight;  // this is 36 arcsec
+
+                    var IRC_width = 20 * VIC_width / 36;
+                    var IRC_height = 16 * VIC_height / 36;
+
+                    var IRC_offset_x = 0.94 * VIC_width / 36;
+                    var IRC_offset_y = 2.19 * VIC_height / 36;
+
+//                    document.write(VIC_width, ' ', VIC_height, ' ', IRC_width, ' ', IRC_height, ' ');
+
                     var img = new Image();
                     img.src = 'data:image/jpeg;base64,' + info.buffer;
-                    ctx_vicd.drawImage(img, 0, 0, 600, 600);
+                    ctx_vicd.clearRect(0, 0, VIC_width, VIC_height);
+                    ctx_vicd.drawImage(img, 0, 0, VIC_width, VIC_height);
+                    if (vicd_toggle) {
+                        // IR camera box
+                        ctx_vicd.beginPath();
+                        ctx_vicd.strokeStyle = "#ffffff";
+                        ctx_vicd.lineWidth = 1;
+                        var start_rect_x = (VIC_width - IRC_width)/2 + IRC_offset_x;
+                        var start_rect_y = (VIC_height - IRC_height)/2 - IRC_offset_y;
+                        ctx_vicd.rect(start_rect_x, start_rect_y, IRC_width, IRC_height);
+                        ctx_vicd.stroke();
+                        ctx_vicd.closePath();
+                        // pointing circle for VIC
+                        var radius = VIC_width / 36; // 1" in pix
+                        ctx_vicd.beginPath();
+                        ctx_vicd.strokeStyle = '#BADA55';
+                        ctx_vicd.lineWidth = 2;
+                        ctx_vicd.arc(VIC_width/2, VIC_height/2, radius, 0, 2 * Math.PI, false);
+                        ctx_vicd.stroke();
+                        ctx_vicd.closePath();
+                        // pointing circle for IRC
+                        var radius = VIC_width / 36; // 1" in pix
+                        ctx_vicd.beginPath();
+                        ctx_vicd.strokeStyle = '#ff6445';
+                        ctx_vicd.lineWidth = 2;
+                        ctx_vicd.arc(VIC_width/2 + IRC_offset_x, VIC_height/2 - IRC_offset_y,
+                                     radius, 0, 2 * Math.PI, false);
+                        ctx_vicd.stroke();
+                        ctx_vicd.closePath();
+                    }
                 }
             });
 
         });
-    </script>
-
-    <script>
-
-        // show/hide box
-        function showHideBox() {
-
-            if ($("#bx").css('display') != "none") {
-                $("#bx").fadeOut();
-            }
-            else {
-                $("#bx").fadeIn();
-            }
-        }
-
     </script>
 
     <style>
@@ -141,26 +190,6 @@
                 height: 600px;
                 top: -13px;
                 margin-top:-600px;
-            }
-
-            .box {
-                z-index: 100;
-                display: block;
-                width: 36px;
-                height: 36px;
-                position: relative;
-                left: 584px;
-                margin-top:-336px;
-                /* Safari 3-4, iOS 1-3.2, Android 1.6- */
-                -webkit-border-radius: 12px;
-
-                /* Firefox 1-3.6 */
-                -moz-border-radius: 12px;
-
-                /* Opera 10.5, IE 9, Safari 5, Chrome, Firefox 4, iOS 4, Android 2.1+ */
-                border-radius: 50%;
-
-                border: 3px solid #BADA55;
             }
         }
         @media only screen and (max-width: 930px) {
@@ -199,26 +228,6 @@
                 top: 290px;
                 margin-top:-600px;
             }
-
-            .box {
-                z-index: 100;
-                display: block;
-                width: 36px;
-                height: 36px;
-                position: relative;
-                left: 282px;
-                margin-top: -32px;
-                /* Safari 3-4, iOS 1-3.2, Android 1.6- */
-                -webkit-border-radius: 12px;
-
-                /* Firefox 1-3.6 */
-                -moz-border-radius: 12px;
-
-                /* Opera 10.5, IE 9, Safari 5, Chrome, Firefox 4, iOS 4, Android 2.1+ */
-                border-radius: 50%;
-
-                border: 3px solid #BADA55;
-            }
         }
 
 
@@ -245,20 +254,6 @@
                 <li><a href="/">Status</a></li>
                 <li class="active"><a href="#">Images</a></li>
                 <li><a href="http://www.oir.caltech.edu/twiki_oir/bin/viewauth/Palomar/RoboAO/WebHome">Twiki</a></li>
-                <li class="dropdown" style="display:none">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                       role="button" aria-haspopup="true"
-                       aria-expanded="false">Dropdown <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
             </ul>
         </div>
     </div>
@@ -268,23 +263,28 @@
 
 
 
-<div class="container theme-showcase" role="main">
+<div class="container" role="main">
 
-    <div class="page-header" style="margin-top:-30px;">
-        <h3>Robo-AO images</h3>
-    </div>
+    <div class="row">
 
-    <div id="img-outer">
-        <div id="img-inner">
-            <canvas id="canvas-dm" width="300px" height="300px"></canvas>
-            <canvas id="canvas-wfs" width="300px" height="300px"></canvas>
-            <canvas id="canvas-vicd" width="600px" height="600px" onClick="showHideBox();"></canvas>
-            <div class="box" id="bx"></div>
+        <div class="col-md-12">
+
+            <div class="page-header" style="margin-top:-30px;">
+                <h3>Robo-AO images</h3>
+            </div>
+
+            <div id="img-outer">
+                <div id="img-inner">
+                    <canvas id="canvas-dm" width="300px" height="300px"></canvas>
+                    <canvas id="canvas-wfs" width="300px" height="300px"></canvas>
+                    <canvas id="canvas-vicd" width="600px" height="600px" onclick="canvas_vicd_click()"></canvas>
+                    <div class="box" id="bx"></div>
+                </div>
+
+            </div>
+            <br><br>
         </div>
-
     </div>
-    <br><br>
-
 </div>
 
 </body>
