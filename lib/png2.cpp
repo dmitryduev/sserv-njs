@@ -623,7 +623,7 @@ int main(int argc, char *argv[])
 
     // read in the status file into a std::string
     //std::ifstream ifs("/home/roboao/Status/vicd_image_status");
-    std::string telemetry_dir("/home/roboao/Status/");
+    std::string telemetry_dir("/home/roboao/Status");
 //    std::string telemetry_dir("/Users/dmitryduev/web/sserv/telemetry");
     std::string f_v_s("/vicd_image_status");
     //std::ifstream ifs("/Users/dmitryduev/web/sserv/telemetry/vicd_image_status");
@@ -669,20 +669,55 @@ int main(int argc, char *argv[])
         double median {img_sorted[img_sorted.size()/2]};
         //std::cout << median  << "\n";
 
+
         // vicd: generate RGB image
-        //unsigned char grey;
         const unsigned w = 1024;
         const unsigned h = 1024;
-        std::vector<unsigned char> image(w * h * 4);
+        unsigned w_c = 1024;
+        unsigned h_c = 1024;
+        unsigned w_start = 0;
+        unsigned w_stop = w;
+        unsigned h_start = 0;
+        unsigned h_stop = h;
+
+        // full-frame vs quarter-frame images:
+        if (pow(img_sorted.size()-1, 0.5) == 256) {
+            // std::cout << 256 << std::endl;
+            w_start = 384;
+            w_stop = 640;
+            h_start = 384;
+            h_stop = 640;
+            w_c = 256;
+            h_c = 256;
+        }
+//        else if (pow(img_sorted.size()-1, 0.5) == 1024) {
+//            std::cout << 1024 << std::endl;
+//        }
+        else {
+            throw;
+        }
+
+        //unsigned char grey;
+
+        std::vector<unsigned char> image(w * h * 4, 0);
+
+        // set transparency for every pixel:
         for(unsigned y = 0; y < h; y++)
             for(unsigned x = 0; x < w; x++)
+            {
+                int index = y * w * 4 + x * 4;
+                image[index + 3] = 255;
+            }
+
+        for(unsigned y = h_start; y < h_stop; y++)
+            for(unsigned x = w_start; x < w_stop; x++)
             {
                 int index = y * w * 4 + x * 4;
                 //grey = std::max(0.0, (img[(h-y)*h-(w-x)] - median) / (max_z) * 255);
                 // last best:
                 //grey = img[(h-y)*h-(w-x)] / (max_z) * 255;
                 //std::cout << int(grey) << "\n";
-                int elm = img[(h-y)*h-(w-x)];
+                int elm = img[(h_c- (y - h_start))*h_c - (w_c - (x - w_start))];
                 //if (max_z - median > 0) {
                 //if (grey > max_z) {
                 //    grey = max_z;
