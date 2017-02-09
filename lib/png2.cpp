@@ -711,7 +711,7 @@ int main(int argc, char *argv[])
     }
     // end try-catch:
     catch(...) {
-        std::cout << "vicd image generation failed.\n";
+        std::cout << "vicd image generation failed." << std::endl;
     }
 
     // ----------- WFS  -------------
@@ -764,7 +764,7 @@ int main(int argc, char *argv[])
         encodeOneStep((output_dir + f_w).c_str(), image2, w2, h2);
     }
     catch(...) {
-        std::cout << "wfs image generation failed.\n";
+        std::cout << "wfs image generation failed." << std::endl;
     }
 
     // ----------- DM  -------------
@@ -847,6 +847,6 @@ int main(int argc, char *argv[])
         encodeOneStep((output_dir + f_d).c_str(), image3, w3, h3);
     }
     catch(...) {
-        std::cout << "dm image generation failed.\n";
+        std::cout << "dm image generation failed." << std::endl;
     }
 }
