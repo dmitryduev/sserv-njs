@@ -690,9 +690,9 @@ int main(int argc, char *argv[])
             w_c = 256;
             h_c = 256;
         }
-//        else if (pow(img_sorted.size()-1, 0.5) == 1024) {
+        else if (pow(img_sorted.size()-1, 0.5) == 1024) {
 //            std::cout << 1024 << std::endl;
-//        }
+        }
         else {
             throw;
         }
