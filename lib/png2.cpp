@@ -623,7 +623,8 @@ int main(int argc, char *argv[])
 
     // read in the status file into a std::string
     //std::ifstream ifs("/home/roboao/Status/vicd_image_status");
-    std::string telemetry_dir("/Users/dmitryduev/web/sserv/telemetry");
+    std::string telemetry_dir("/home/roboao/Status/");
+//    std::string telemetry_dir("/Users/dmitryduev/web/sserv/telemetry");
     std::string f_v_s("/vicd_image_status");
     //std::ifstream ifs("/Users/dmitryduev/web/sserv/telemetry/vicd_image_status");
     if (argc == 3) {

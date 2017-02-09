@@ -295,9 +295,10 @@ Loop();
 
 // generate png files
 //var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv/telemetry';
-//var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv-njs/telemetry';
-var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status;';
-//var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/web/sserv-njs/telemetry;';
+// var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv-njs/telemetry';
+var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv-njs/telemetry/2017_02_08/';
+//var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status';
+//var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/web/sserv-njs/telemetry';
 
 // telemetry streaming loop
 function LoopImg() {
