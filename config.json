@@ -33,10 +33,19 @@
         },
         "Chiller": {
             "T, °C": [[10], {"success": [[9, 12]], "danger": [[-1e9, 9], [15, 1e9]], "warning": [[12, 15]]}, [true, 600, "UTC"], true],
-            "Op, s": [[11], {"success": [[0, 10]], "danger": [[20, 32]], "warning": [[10, 20]]}, [false], true],
+            "Op, s": [[11], {"success": [[0, 10]], "danger": [[20, 32]], "warning": [[10, 20]]}, [true, 600, "UTC"], true],
             "Flow": [[8], {"success": ["FLOWING"], "danger": ["NO_FLOW"]}, [false], true],
             "Reservoir": [[9], {"success": ["OK"], "danger": ["Error"]}, [false], true]
         }
+    },
+    "LCH File Status": {
+        "data-file": "/home/roboao/Status/LCH_file_status",
+        "Time stamp": [[1, 3], {"success": [[-5, 2]], "danger": [[2, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
+        "Load time": [[3], {"success": [[0, 86400]], "danger": [[86400, 1e9], [-1e9, 0]]}, [false], false],
+        "File 1": [[4], {}, [false], false],
+        "File 2": [[5], {}, [false], false],
+        "File 3": [[6], {}, [false], false],
+        "File 4": [[7], {}, [false], false]
     },
     "AO system": {
         "data-file": "/home/roboao/Status/ao_system_status",
