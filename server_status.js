@@ -118,7 +118,7 @@ function fetch(config) {
                     // deal with it separately
                     // config.json lists ranges in seconds WRT datetime.now()
                     // beware that it should all be in UTC!
-                    if (key.toLowerCase().indexOf("time") != -1) {
+                    if (key.toLowerCase().indexOf("time") != -1 && key.toLowerCase().indexOf("stamp") != -1) {
                         var then = Date.parse(data[system]['globals'][key] + " UTC");
                         var now = Date.now();
                         // time between now and then in seconds:
@@ -130,8 +130,9 @@ function fetch(config) {
                     for (var code in config[system][key][1]) {
                         var rng = config[system][key][1][code];
                         if (rng[0] instanceof Array) {
-                            //console.log(key, code, rng);
+                            // console.log(system, key, code, rng);
                             rng.forEach(function(rn, i, rng) {
+                                // console.log(rn, tmp, parseFloat(tmp), rn[0]<= parseFloat(tmp), parseFloat(tmp) < rn[1]);
                                 if (rn[0]<= parseFloat(tmp) && parseFloat(tmp) < rn[1]){
                                     color_code = code;
                                 }
@@ -294,11 +295,7 @@ Loop();
 // Stream images
 
 // generate png files
-//var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv/telemetry';
-// var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv-njs/telemetry';
-// var cmd = './lib/png2 /Users/dmitryduev/web/sserv-njs/public /Users/dmitryduev/web/sserv-njs/telemetry/2017_02_08/';
-var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/Status';
-//var cmd = '/home/roboao/web/sserv-njs/lib/png2 /home/roboao/web/sserv-njs/public /home/roboao/web/sserv-njs/telemetry';
+var cmd = '/home/roboao/Work/dima/sserv-njs/lib/png2 /home/roboao/Work/dima/sserv-njs/public /home/roboao/Status';
 
 // telemetry streaming loop
 function LoopImg() {
