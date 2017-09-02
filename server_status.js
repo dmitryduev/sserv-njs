@@ -317,11 +317,11 @@ function LoopImg() {
             fs.readFile('public/vicd.png', function(err, buf){
                 // io.emit('vicd', { image: true, buffer: buf.toString('base64') });
                 io.emit('vicd', { image: true, buffer: buf });
-                console.log('sent!')
+                // console.log('sent!')
             });
         }
     });
-    setTimeout(function() {LoopImg()}, 1000);
+    setTimeout(function() {LoopImg()}, 900);
 }
 
 LoopImg();
