@@ -503,14 +503,14 @@
 
             <!-- Colored labels -->
             <div id="col-log-2" style="background:#0f1420;
-                color:#999; z-index:200; overflow-y: scroll; overflow-x: hidden;
+                color:#222; z-index:200; overflow-y: scroll; overflow-x: hidden;
                 border-top: solid white 2px;
                 height: 28px; width:100%; position: fixed; right: 0px; bottom:0px;
                 padding: 0 0 0 5px; margin:0px; line-height:0.8;">
                 <br>
                 {% for system, item in skelet %}
                     <span class="label label-default" id="{{ system }}-label"
-                          style="font-size: 10px; font-weight:200; cursor:pointer;"
+                          style="font-size: 10px; font-weight:200; cursor:pointer; color:#222 !important;"
                           onclick="scrollTo('{{system}}')">{{system}}</span>&nbsp;
                 {% endfor %}
             </div>
