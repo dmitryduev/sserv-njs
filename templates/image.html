@@ -119,8 +119,8 @@
             };
             img_wfs.onload = function() {
                 // Clear canvas and immediately paint the image
-                ctx_vicd.clearRect(0, 0, 300, 300);
-                ctx_vicd.drawImage(img_wfs, 0, 0, 300, 300);
+                img_wfs.clearRect(0, 0, 300, 300);
+                img_wfs.drawImage(img_wfs, 0, 0, 300, 300);
             };
             img_vicd.onload = function() {
                 // Clear canvas and immediately paint the image
