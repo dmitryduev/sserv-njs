@@ -10,7 +10,7 @@
     "express": "^4.13.3",
     "serve-favicon": "^2.3.0",
     "nunjucks": "^2.3.0",
-    "socket.io": "^1.4.3",
+    "socket.io": "^2.0.3",
     "ncp": "^2.0.0"
   }
 }
