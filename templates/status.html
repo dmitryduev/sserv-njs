@@ -83,6 +83,57 @@
 //                                }
 
                                 // TODO: here come the plots
+                                // plot stuff if set in config.json
+                                if (data[key]["globals"][key2][2]) {
+                                    // make sure the dropdown toggle for the plots part of panel is displayed:
+                                    document.getElementById(key+"-dropdown").style.display = "block";
+                                    // make sure the plots part of panel is displayed:
+                                    //document.getElementById(key+"-plots").style.display = "block";
+                                    // allocate place for array and for the plot if necessary:
+                                    var divid = key+":"+key2+":plot";
+                                    if ( !plots.hasOwnProperty(divid) ) {
+                                        // div for da plot exists?
+                                        var plot_divs = $("[id='" + key + "-plots-container'] > div").map(function(){
+                                            return this.id;
+                                        }).get();
+                                        //document.write(plot_divs);
+                                        // no? i can haz div?
+                                        if (plot_divs.indexOf(divid)==-1) {
+                                            $("[id='" + key + "-plots-container']").prepend( "<div id=\"" + divid +
+                                                "\" style=\"height:120px; padding:0px; margin-left:-40px;\"></div>" +
+                                                "<hr style='margin:0 -10px 0 -10px;'>" );
+                                        }
+                                        // init plot:
+                                        var g = plot_init(divid, divid, data[key]["globals"][key2][4]);
+                                        // keep it in a dark and dry place:
+                                        plots[divid] = [[], g];
+                                    }
+                                    // date in UTC:
+                                    var t_string = data[key]["globals"]["Time stamp"][0];
+                                    var t_ = t_string.split(/[^0-9]/);
+                                    var t = new Date(Date.UTC(t_[0],t_[1]-1,t_[2],t_[3],t_[4],t_[5],t_[6]));
+                                    // data point:
+                                    var x = data[key]["subs"][key2][0];
+
+                                    // check if the current t is not in there already
+                                    if (plots[divid][0].length==0 ||
+                                        plots[divid][0][plots[divid][0].length-1][0].getTime()!=t.getTime()) {
+                                        // save these:
+                                        plots[divid][0].push([t, parseFloat(x)]);
+                                        // array too long? we're displaying the last N points only
+                                        if (plots[divid][0].length > data[key]["subs"][key2][3]) {
+                                            plots[divid][0].shift();
+                                        }
+                                        // make/update plot:
+                                        //plots[divid][1].updateSize();
+                                        plots[divid][1].updateOptions( { 'file': plots[divid][0] } );
+                                        // y value range ok?
+                                        var Xval = plots[divid][0].map(function(value, index) { return value[1]; });
+                                        var Xmin = Math.min.apply(null, Xval);
+                                        var Xmax = Math.max.apply(null, Xval);
+                                        plots[divid][1].updateOptions({ 'valueRange': [Xmin-0.1, Xmax+0.1] });
+                                    }
+                                }
 
                                 // colorize panel face if param is critical
                                 if (data[key]["globals"][key2][5]) { // critical?
