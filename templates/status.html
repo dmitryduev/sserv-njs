@@ -82,7 +82,6 @@
 //                                            tmp_val + " -> " + data[key]["globals"][key2][0]);
 //                                }
 
-                                // TODO: here come the plots
                                 // plot stuff if set in config.json
                                 if (data[key]["globals"][key2][2]) {
                                     // make sure the dropdown toggle for the plots part of panel is displayed:
@@ -113,7 +112,7 @@
                                     var t_ = t_string.split(/[^0-9]/);
                                     var t = new Date(Date.UTC(t_[0],t_[1]-1,t_[2],t_[3],t_[4],t_[5],t_[6]));
                                     // data point:
-                                    var x = data[key]["subs"][key2][0];
+                                    var x = data[key]["globals"][key2][0];
 
                                     // check if the current t is not in there already
                                     if (plots[divid][0].length==0 ||
