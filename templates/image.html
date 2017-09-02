@@ -91,7 +91,7 @@
             socket.on('dm', function (info) {
                 if (info.image) {
                     img_dm.src = 'data:image/jpeg;base64,' + info.buffer;
-                    ctx_dm.clearRect(0, 0, 300, 300);
+//                    ctx_dm.clearRect(0, 0, 300, 300);
                     ctx_dm.drawImage(img_dm, 0, 0, 300, 300);
                 }
             });
