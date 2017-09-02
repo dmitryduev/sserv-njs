@@ -87,6 +87,29 @@
 
             // init canvases:
             var img_dm = new Image();
+            var img_wfs = new Image();
+            var img_vicd = new Image();
+
+            // init pointing helpers for vicd
+            var VIC_width = ctx_vicd.canvas.clientWidth;  // this is 36 arcsec
+            var VIC_height = ctx_vicd.canvas.clientHeight;  // this is 36 arcsec
+
+            var IRC_width = 20 * VIC_width / 36;
+            var IRC_height = 16 * VIC_height / 36;
+
+            // before alignment in March 2017
+            //var IRC_offset_x = 0.94 * VIC_width / 36;
+            //var IRC_offset_y = 2.19 * VIC_height / 36;
+            // after alignment:
+            var IRC_offset_x = 0;
+            var IRC_offset_y = 0;
+
+            // dither center positions for IR camera:
+            var IRC_offset_dither_1_x = -5 * VIC_width / 36;
+            var IRC_offset_dither_1_y = 0;
+            var IRC_offset_dither_2_x = 5 * VIC_width / 36;
+            var IRC_offset_dither_2_y = 0;
+            // console.log(VIC_width, ' ', VIC_height, ' ', IRC_width, ' ', IRC_height, ' ');
 
             socket.on('dm', function (info) {
                 if (info.image) {
@@ -98,40 +121,17 @@
 
             socket.on('wfs', function (info) {
                 if (info.image) {
-                    var img = new Image();
-                    img.src = 'data:image/jpeg;base64,' + info.buffer;
-                    ctx_wfs.clearRect(0, 0, 300, 300);
-                    ctx_wfs.drawImage(img, 0, 0, 300, 300);
+                    img_wfs.src = 'data:image/jpeg;base64,' + info.buffer;
+//                    ctx_wfs.clearRect(0, 0, 300, 300);
+                    ctx_wfs.drawImage(img_wfs, 0, 0, 300, 300);
                 }
             });
 
             socket.on('vicd', function (info) {
                 if (info.image) {
-                    var VIC_width = ctx_vicd.canvas.clientWidth;  // this is 36 arcsec
-                    var VIC_height = ctx_vicd.canvas.clientHeight;  // this is 36 arcsec
-
-                    var IRC_width = 20 * VIC_width / 36;
-                    var IRC_height = 16 * VIC_height / 36;
-
-                    // before alignment in March 2017
-                    //var IRC_offset_x = 0.94 * VIC_width / 36;
-                    //var IRC_offset_y = 2.19 * VIC_height / 36;
-                    // after alignment:
-                    var IRC_offset_x = 0;
-                    var IRC_offset_y = 0;
-
-                    // dither center positions for IR camera:
-                    var IRC_offset_dither_1_x = -5 * VIC_width / 36;
-                    var IRC_offset_dither_1_y = 0;
-                    var IRC_offset_dither_2_x = 5 * VIC_width / 36;
-                    var IRC_offset_dither_2_y = 0;
-
-//                    document.write(VIC_width, ' ', VIC_height, ' ', IRC_width, ' ', IRC_height, ' ');
-
-                    var img = new Image();
-                    img.src = 'data:image/jpeg;base64,' + info.buffer;
-                    ctx_vicd.clearRect(0, 0, VIC_width, VIC_height);
-                    ctx_vicd.drawImage(img, 0, 0, VIC_width, VIC_height);
+                    img_vicd.src = 'data:image/jpeg;base64,' + info.buffer;
+//                    ctx_vicd.clearRect(0, 0, VIC_width, VIC_height);
+                    ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
                     if (vicd_toggle && false) {
                         // IR camera box
                         ctx_vicd.beginPath();
