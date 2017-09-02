@@ -173,5 +173,13 @@
             "Telescope": [[31], {}, [false], false],
             "Woffer": [[32], {}, [false], false]
         }
+    },
+    "Dew point data": {
+        "data-file": "/home/roboao/Status/dewpoint_status",
+        "Time stamp": [[0, 2], {"success": [[-600, 20]], "danger": [[20, 1e9], [-1e9, -1200]], "warning": [[-1200, -600]]}, [false], true],
+        "Air T, °C": [[2], {}, [false], false],
+        "Dew point, °C": [[3], {}, [false], false],
+        "Humidity, %": [[4], {}, [false], false],
+        "Split, °C": [[5], {}, [false], false]
     }
 }
