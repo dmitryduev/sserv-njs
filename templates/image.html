@@ -113,7 +113,15 @@
 
             socket.on('dm', function (info) {
                 if (info.image) {
-                    img_dm.src = 'data:image/jpeg;base64,' + info.buffer;
+                    var uint8Arr = new Uint8Array(info.buffer);
+                    var binary = '';
+                    for (var i = 0; i < uint8Arr.length; i++) {
+                        binary += String.fromCharCode(uint8Arr[i]);
+                    }
+                    var base64String = window.btoa(binary);
+
+                    img_dm.src = 'data:image/png;base64,' + base64String;
+//                    img_dm.src = 'data:image/jpg;base64,' + info.buffer;
 //                    ctx_dm.clearRect(0, 0, 300, 300);
                     ctx_dm.drawImage(img_dm, 0, 0, 300, 300);
                 }
@@ -121,7 +129,15 @@
 
             socket.on('wfs', function (info) {
                 if (info.image) {
-                    img_wfs.src = 'data:image/jpeg;base64,' + info.buffer;
+                    var uint8Arr = new Uint8Array(info.buffer);
+                    var binary = '';
+                    for (var i = 0; i < uint8Arr.length; i++) {
+                        binary += String.fromCharCode(uint8Arr[i]);
+                    }
+                    var base64String = window.btoa(binary);
+
+                    img_wfs.src = 'data:image/png;base64,' + base64String;
+//                    img_wfs.src = 'data:image/jpeg;base64,' + info.buffer;
 //                    ctx_wfs.clearRect(0, 0, 300, 300);
                     ctx_wfs.drawImage(img_wfs, 0, 0, 300, 300);
                 }
