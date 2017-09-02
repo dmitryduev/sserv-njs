@@ -127,6 +127,57 @@
                 ctx_vicd.clearRect(0, 0, VIC_width, VIC_height);
 //                ctx_vicd.drawImage(img_vicd, 0, 0);
                 ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
+
+                if (vicd_toggle) {
+                    // IR camera box
+                    ctx_vicd.beginPath();
+                    ctx_vicd.strokeStyle = "#ffffff";
+                    ctx_vicd.lineWidth = 1;
+                    var start_rect_x = (VIC_width - IRC_width)/2 + IRC_offset_x;
+                    var start_rect_y = (VIC_height - IRC_height)/2 - IRC_offset_y;
+                    ctx_vicd.rect(start_rect_x, start_rect_y, IRC_width, IRC_height);
+                    ctx_vicd.stroke();
+                    ctx_vicd.closePath();
+                    // pointing circle for VIC
+                    var radius_vic = VIC_width / 36; // 1" in pix
+                    ctx_vicd.beginPath();
+                    ctx_vicd.strokeStyle = '#BADA55';
+                    ctx_vicd.lineWidth = 2;
+                    ctx_vicd.arc(VIC_width/2, VIC_height/2, radius_vic, 0, 2 * Math.PI, false);
+                    ctx_vicd.stroke();
+                    ctx_vicd.closePath();
+                    // pointing circle for IRC
+                    if (Math.abs(IRC_offset_x) > 0 && Math.abs(IRC_offset_y) > 0) {
+                        var radius_ir = VIC_width / 36; // 1" in pix
+                        ctx_vicd.beginPath();
+                        ctx_vicd.strokeStyle = '#ff6445';
+                        ctx_vicd.lineWidth = 2;
+                        ctx_vicd.arc(VIC_width / 2 + IRC_offset_x, VIC_height / 2 - IRC_offset_y,
+                            radius_ir, 0, 2 * Math.PI, false);
+                        ctx_vicd.stroke();
+                        ctx_vicd.closePath();
+                    }
+                    // dither centers:
+                    var radius_ir_dither = VIC_width / 36 / 4; // 0.25" in pix
+                    // first center
+                    ctx_vicd.beginPath();
+                    ctx_vicd.strokeStyle = '#ff6445';
+                    ctx_vicd.lineWidth = 1;
+                    ctx_vicd.arc(VIC_width / 2 + IRC_offset_x + IRC_offset_dither_1_x,
+                        VIC_height / 2 - IRC_offset_y + IRC_offset_dither_1_y,
+                        radius_ir_dither, 0, 2 * Math.PI, false);
+                    ctx_vicd.stroke();
+                    ctx_vicd.closePath();
+                    // second center
+                    ctx_vicd.beginPath();
+                    ctx_vicd.strokeStyle = '#ff6445';
+                    ctx_vicd.lineWidth = 1;
+                    ctx_vicd.arc(VIC_width / 2 + IRC_offset_x + IRC_offset_dither_2_x,
+                        VIC_height / 2 - IRC_offset_y + IRC_offset_dither_2_y,
+                        radius_ir_dither, 0, 2 * Math.PI, false);
+                    ctx_vicd.stroke();
+                    ctx_vicd.closePath();
+                }
             };
 
             socket.on('dm', function (info) {
@@ -176,56 +227,7 @@
 //                    ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
 //                    ctx_vicd.drawImage(img_vicd, 0, 0, 300, 300);
 //                    console.log(base64String.substring(0,100));
-                    if (vicd_toggle) {
-                        // IR camera box
-                        ctx_vicd.beginPath();
-                        ctx_vicd.strokeStyle = "#ffffff";
-                        ctx_vicd.lineWidth = 1;
-                        var start_rect_x = (VIC_width - IRC_width)/2 + IRC_offset_x;
-                        var start_rect_y = (VIC_height - IRC_height)/2 - IRC_offset_y;
-                        ctx_vicd.rect(start_rect_x, start_rect_y, IRC_width, IRC_height);
-                        ctx_vicd.stroke();
-                        ctx_vicd.closePath();
-                        // pointing circle for VIC
-                        var radius_vic = VIC_width / 36; // 1" in pix
-                        ctx_vicd.beginPath();
-                        ctx_vicd.strokeStyle = '#BADA55';
-                        ctx_vicd.lineWidth = 2;
-                        ctx_vicd.arc(VIC_width/2, VIC_height/2, radius_vic, 0, 2 * Math.PI, false);
-                        ctx_vicd.stroke();
-                        ctx_vicd.closePath();
-                        // pointing circle for IRC
-                        if (Math.abs(IRC_offset_x) > 0 && Math.abs(IRC_offset_y) > 0) {
-                            var radius_ir = VIC_width / 36; // 1" in pix
-                            ctx_vicd.beginPath();
-                            ctx_vicd.strokeStyle = '#ff6445';
-                            ctx_vicd.lineWidth = 2;
-                            ctx_vicd.arc(VIC_width / 2 + IRC_offset_x, VIC_height / 2 - IRC_offset_y,
-                                radius_ir, 0, 2 * Math.PI, false);
-                            ctx_vicd.stroke();
-                            ctx_vicd.closePath();
-                        }
-                        // dither centers:
-                        var radius_ir_dither = VIC_width / 36 / 4; // 0.25" in pix
-                        // first center
-                        ctx_vicd.beginPath();
-                        ctx_vicd.strokeStyle = '#ff6445';
-                        ctx_vicd.lineWidth = 1;
-                        ctx_vicd.arc(VIC_width / 2 + IRC_offset_x + IRC_offset_dither_1_x,
-                            VIC_height / 2 - IRC_offset_y + IRC_offset_dither_1_y,
-                            radius_ir_dither, 0, 2 * Math.PI, false);
-                        ctx_vicd.stroke();
-                        ctx_vicd.closePath();
-                        // second center
-                        ctx_vicd.beginPath();
-                        ctx_vicd.strokeStyle = '#ff6445';
-                        ctx_vicd.lineWidth = 1;
-                        ctx_vicd.arc(VIC_width / 2 + IRC_offset_x + IRC_offset_dither_2_x,
-                            VIC_height / 2 - IRC_offset_y + IRC_offset_dither_2_y,
-                            radius_ir_dither, 0, 2 * Math.PI, false);
-                        ctx_vicd.stroke();
-                        ctx_vicd.closePath();
-                    }
+
                 }
             });
 
