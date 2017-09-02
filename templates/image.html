@@ -115,19 +115,18 @@
             img_dm.onload = function() {
                 // Clear canvas and immediately paint the image
                 ctx_dm.clearRect(0, 0, 300, 300);
-                ctx_dm.drawImage(img_dm, 0, 0);
-//                ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
+                ctx_dm.drawImage(img_dm, 0, 0, 300, 300);
             };
             img_wfs.onload = function() {
                 // Clear canvas and immediately paint the image
                 ctx_vicd.clearRect(0, 0, 300, 300);
-                ctx_vicd.drawImage(img_wfs, 0, 0);
+                ctx_vicd.drawImage(img_wfs, 0, 0, 300, 300);
             };
             img_vicd.onload = function() {
                 // Clear canvas and immediately paint the image
                 ctx_vicd.clearRect(0, 0, VIC_width, VIC_height);
-                ctx_vicd.drawImage(img_vicd, 0, 0);
-//                ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
+//                ctx_vicd.drawImage(img_vicd, 0, 0);
+                ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
             };
 
             socket.on('dm', function (info) {
