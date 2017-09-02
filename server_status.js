@@ -239,7 +239,7 @@ app.get('/image', function(req, res){
     res.render('image.html');
 });
 
-io.on('connection', function(socket){
+// io.on('connection', function(socket){
     // console.log('a user connected');
     // socket.on('disconnect', function(){
     //     console.log('user disconnected');
@@ -250,7 +250,7 @@ io.on('connection', function(socket){
         io.emit('chat message', msg);
     });
     */
-});
+// });
 
 
 // start listening
@@ -261,9 +261,9 @@ http.listen(8080, function(){
 
 // Copy telemetry data from NFS to local disk
 // mkdir telemetry if doesn't exist
-if (!fs.existsSync('telemetry')){
-    fs.mkdirSync('telemetry');
-}
+// if (!fs.existsSync('telemetry')){
+//     fs.mkdirSync('telemetry');
+// }
 
 function cpLoop(source, destination) {
     ncp(source, destination, function (err) {
@@ -287,7 +287,7 @@ function Loop() {
     io.emit('telemetry', data);
     //socket.volatile.emit
     //socket.broadcast.emit
-    setTimeout(function() {Loop()}, 1000);
+    setTimeout(function() {Loop()}, 900);
 }
 
 Loop();
@@ -307,13 +307,16 @@ function LoopImg() {
         //console.log(error);
         if (error == null) {
             fs.readFile('public/dm.png', function(err, buf){
-                io.emit('dm', { image: true, buffer: buf.toString('base64') });
+                // io.emit('dm', { image: true, buffer: buf.toString('base64') });
+                io.emit('dm', { image: true, buffer: buf });
             });
             fs.readFile('public/wfs.png', function(err, buf){
-                io.emit('wfs', { image: true, buffer: buf.toString('base64') });
+                // io.emit('wfs', { image: true, buffer: buf.toString('base64') });
+                io.emit('wfs', { image: true, buffer: buf });
             });
             fs.readFile('public/vicd.png', function(err, buf){
-                io.emit('vicd', { image: true, buffer: buf.toString('base64') });
+                // io.emit('vicd', { image: true, buffer: buf.toString('base64') });
+                io.emit('vicd', { image: true, buffer: buf });
             });
         }
     });
