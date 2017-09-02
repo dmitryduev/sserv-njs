@@ -90,6 +90,12 @@
             var img_wfs = new Image();
             var img_vicd = new Image();
 
+            img_vicd.onload = function() {
+                // Clear canvas and immediately paint the image
+                ctx_vicd.drawingContext.clearRect(0, 0, 300, 300);
+                ctx_vicd.drawingContext.drawImage(img_vicd, 0, 0);
+            };
+
             // init pointing helpers for vicd
             var VIC_width = ctx_vicd.canvas.clientWidth;  // this is 36 arcsec
             var VIC_height = ctx_vicd.canvas.clientHeight;  // this is 36 arcsec
@@ -156,7 +162,7 @@
 //                    img_vicd.src = 'data:image/jpeg;base64,' + info.buffer;
 //                    ctx_vicd.clearRect(0, 0, VIC_width, VIC_height);
 //                    ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
-                    ctx_vicd.drawImage(img_vicd, 0, 0, 300, 300);
+//                    ctx_vicd.drawImage(img_vicd, 0, 0, 300, 300);
                     console.log(base64String.substring(0,100));
                     if (vicd_toggle && false) {
                         // IR camera box
