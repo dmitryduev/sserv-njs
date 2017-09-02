@@ -90,12 +90,6 @@
             var img_wfs = new Image();
             var img_vicd = new Image();
 
-            img_vicd.onload = function() {
-                // Clear canvas and immediately paint the image
-                ctx_vicd.clearRect(0, 0, 300, 300);
-                ctx_vicd.drawImage(img_vicd, 0, 0);
-            };
-
             // init pointing helpers for vicd
             var VIC_width = ctx_vicd.canvas.clientWidth;  // this is 36 arcsec
             var VIC_height = ctx_vicd.canvas.clientHeight;  // this is 36 arcsec
@@ -117,6 +111,25 @@
             var IRC_offset_dither_2_y = 0;
             // console.log(VIC_width, ' ', VIC_height, ' ', IRC_width, ' ', IRC_height, ' ');
 
+            // prepare canvases
+            img_dm.onload = function() {
+                // Clear canvas and immediately paint the image
+                ctx_dm.clearRect(0, 0, 300, 300);
+                ctx_dm.drawImage(img_dm, 0, 0);
+//                ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
+            };
+            img_wfs.onload = function() {
+                // Clear canvas and immediately paint the image
+                ctx_vicd.clearRect(0, 0, 300, 300);
+                ctx_vicd.drawImage(img_wfs, 0, 0);
+            };
+            img_vicd.onload = function() {
+                // Clear canvas and immediately paint the image
+                ctx_vicd.clearRect(0, 0, VIC_width, VIC_height);
+                ctx_vicd.drawImage(img_vicd, 0, 0);
+//                ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
+            };
+
             socket.on('dm', function (info) {
                 if (info.image) {
                     var uint8Arr = new Uint8Array(info.buffer);
@@ -129,7 +142,7 @@
                     img_dm.src = 'data:image/png;base64,' + base64String;
 //                    img_dm.src = 'data:image/jpg;base64,' + info.buffer;
 //                    ctx_dm.clearRect(0, 0, 300, 300);
-                    ctx_dm.drawImage(img_dm, 0, 0, 300, 300);
+//                    ctx_dm.drawImage(img_dm, 0, 0, 300, 300);
                 }
             });
 
@@ -145,7 +158,7 @@
                     img_wfs.src = 'data:image/png;base64,' + base64String;
 //                    img_wfs.src = 'data:image/jpeg;base64,' + info.buffer;
 //                    ctx_wfs.clearRect(0, 0, 300, 300);
-                    ctx_wfs.drawImage(img_wfs, 0, 0, 300, 300);
+//                    ctx_wfs.drawImage(img_wfs, 0, 0, 300, 300);
                 }
             });
 
@@ -163,7 +176,7 @@
 //                    ctx_vicd.clearRect(0, 0, VIC_width, VIC_height);
 //                    ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
 //                    ctx_vicd.drawImage(img_vicd, 0, 0, 300, 300);
-                    console.log(base64String.substring(0,100));
+//                    console.log(base64String.substring(0,100));
                     if (vicd_toggle && false) {
                         // IR camera box
                         ctx_vicd.beginPath();
