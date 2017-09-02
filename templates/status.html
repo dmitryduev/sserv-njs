@@ -121,7 +121,7 @@
                                         // save these:
                                         plots[divid][0].push([t, parseFloat(x)]);
                                         // array too long? we're displaying the last N points only
-                                        if (plots[divid][0].length > data[key]["subs"][key2][3]) {
+                                        if (plots[divid][0].length > data[key]["globals"][key2][3]) {
                                             plots[divid][0].shift();
                                         }
                                         // make/update plot:
