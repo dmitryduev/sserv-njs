@@ -185,9 +185,8 @@
     "Environmental data": {
         "data-file": "/home/roboao/Status/environment_status",
         "Time stamp": [[0, 2], {"success": [[-600, 20]], "danger": [[20, 1e9], [-1e9, -1200]], "warning": [[-1200, -600]]}, [false], true],
-        "amb_temp, °C": [[2], {}, [true, 100, "UTC"], false],
         "sec_mir_t, °C": [[3], {"info": [[-40, 100]]}, [true, 100, "UTC"], false],
-        "pier_stairs, °C": [[4], {}, [true, 100, "UTC"], false],
+        "pier_stairs, °C": [[4], {"info": [[-40, 100]]}, [true, 100, "UTC"], false],
         "flr_obs, °C": [[5], {}, [true, 100, "UTC"], false],
         "elevator_t, °C": [[6], {}, [true, 100, "UTC"], false],
         "mezz_t, °C": [[7], {}, [true, 100, "UTC"], false],
