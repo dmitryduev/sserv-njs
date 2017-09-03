@@ -42,23 +42,8 @@
 
     <!-- Images -->
     <script>
-        // show/hide box
-        function showHideBox() {
-
-            if ($("#bx").css('display') != "none") {
-                $("#bx").fadeOut();
-            }
-            else {
-                $("#bx").fadeIn();
-            }
-        }
-
         var vicd_toggle = true;
         function canvas_vicd_click() {
-            // show field center:
-            showHideBox();
-            // show IR camera box
-//            vicd_toggle = (vicd_toggle == true) ? false : true;
             vicd_toggle = (vicd_toggle != true);
         }
     </script>
