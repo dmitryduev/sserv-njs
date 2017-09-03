@@ -51,21 +51,40 @@
 
         $(document).ready(function() {
             var ctx_dm = document.getElementById('canvas-dm').getContext('2d');
-            ctx_dm.imageSmoothingEnabled = false;
-            ctx_dm.webkitImageSmoothingEnabled = false;
-            ctx_dm.msImageSmoothingEnabled = false;
-            ctx_dm.mozImageSmoothingEnabled = false;
 
             var ctx_wfs = document.getElementById('canvas-wfs').getContext('2d');
-            ctx_wfs.imageSmoothingEnabled = false;
-            ctx_wfs.mozImageSmoothingEnabled = false;
-            ctx_wfs.webkitImageSmoothingEnabled = false;
-            ctx_wfs.msImageSmoothingEnabled = false;
             // flip vertically (as the png is somehow flipped):
             //ctx_wfs.translate(0, 300);
             //ctx_wfs.scale(1, -1);
 
             var ctx_vicd = document.getElementById('canvas-vicd').getContext('2d');
+
+            if (window.innerWidth > 700) {
+                ctx_dm.canvas.width  = 280;
+                ctx_dm.canvas.height = 280;
+                ctx_wfs.canvas.width  = 280;
+                ctx_wfs.canvas.height = 280;
+                ctx_vicd.canvas.width  = 565;
+                ctx_vicd.canvas.height = 565;
+            }
+            else {
+                ctx_dm.canvas.width  = 140;
+                ctx_dm.canvas.height = 140;
+                ctx_wfs.canvas.width  = 140;
+                ctx_wfs.canvas.height = 140;
+                ctx_vicd.canvas.width  = 282;
+                ctx_vicd.canvas.height = 282;
+            }
+
+            // disable smoothing
+            ctx_dm.imageSmoothingEnabled = false;
+            ctx_dm.webkitImageSmoothingEnabled = false;
+            ctx_dm.msImageSmoothingEnabled = false;
+            ctx_dm.mozImageSmoothingEnabled = false;
+            ctx_wfs.imageSmoothingEnabled = false;
+            ctx_wfs.mozImageSmoothingEnabled = false;
+            ctx_wfs.webkitImageSmoothingEnabled = false;
+            ctx_wfs.msImageSmoothingEnabled = false;
             ctx_vicd.imageSmoothingEnabled = false;
             ctx_vicd.mozImageSmoothingEnabled = false;
             ctx_vicd.webkitImageSmoothingEnabled = false;
@@ -259,11 +278,11 @@
         <div class="row justify-content-md-center">
 
             <div class="col-lg-4 col-md-12">
-                <canvas id="canvas-dm" width="280px" height="280px" class="p-0 m-0"></canvas>
-                <canvas id="canvas-wfs" width="280px" height="280px" class="p-0 m-0"></canvas>
+                <canvas id="canvas-dm" class="p-0 m-0"></canvas>
+                <canvas id="canvas-wfs" class="p-0 m-0"></canvas>
             </div>
             <div class="col-lg-auto col-md-12">
-                <canvas id="canvas-vicd" width="565px" height="565px" onclick="canvas_vicd_click()"
+                <canvas id="canvas-vicd" onclick="canvas_vicd_click()"
                         class="p-0 m-0"></canvas>
             </div>
             <br><br>
