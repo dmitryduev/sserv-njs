@@ -63,7 +63,7 @@
             "Min value": [[14], {"success": [[1000, 44000]], "danger": [[0, 100], [44900, 45000]], "warning": [[100, 1000], [44000, 44900]]}, [false], false],
             "Median value": [[16], {"success": [[1000, 44000]], "danger": [[0, 100], [44900, 45000]], "warning": [[100, 1000], [44000, 44900]]}, [false], false],
             "Max value": [[15], {"success": [[1000, 44000]], "danger": [[0, 100], [44900, 45000]], "warning": [[100, 1000], [44000, 44900]]}, [false], false],
-            "r<sub>0</sub>": [[19], {}, [false], false]
+            "r_0": [[19], {}, [false], false]
         }
     },
     "AO loop": {

@@ -1,41 +1,133 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head 
-          content must come *after* these tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="Dr. Dmitry A. Duev">
-
-    <title>Robo-AO status</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap theme -->
-    <link href="/static/css/bootstrap-theme.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="/static/theme.css" rel="stylesheet">
-
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/static/robot-favicon.png" />
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <title>Starter Template for Bootstrap</title>
 
-    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https:://cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.min.css" />
 
+    <!-- Custom styles for this page -->
+    <style>
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+        body {
+            padding-top: 1rem;
+            font-size: 0.9rem;
+            /* Margin bottom by footer height */
+            margin-bottom: 30px;
+        }
+        .template {
+            padding: 3.5rem 1rem;
+            text-align: left;
+        }
+        .table-condensed>thead>tr>th, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>th,
+        .table-condensed>thead>tr>td, .table-condensed>tbody>tr>td, .table-condensed>tfoot>tr>td {
+            padding: 0;
+            margin: 0;
+            font-size: 0.57rem;
+        }
+        th {
+            font-weight: 500 !important;
+        }
+        .navbar {
+            padding: 0.3rem 2rem !important;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            /* Set the fixed height of the footer here */
+            height: 30px;
+            line-height: 30px; /* Vertically center the text there */
+            background-color: #212529;
+        }
+        @media only screen and (max-width: 768px) {
+            .footer  {
+                display:none;
+            }
+        }
+        .dygraph-ylabel {
+            font-size: 10px;
+            line-height: 100%;
+            text-align: right;
+        }
+
+        .dygraph-title {
+            font-size: 12px;
+            line-height: 100%;
+            margin:10px;
+            text-align: center;
+        }
+
+        .dygraph-axis-label { font-size: 10px; }
+
+        .dygraph-legend {
+            padding-top: 20px;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .bg-danger {
+            color: #fce2e2 !important;
+        }
+        .badge-danger {
+            color: #fce2e2 !important;
+        }
+        .bg-danger>a {
+            color: #fce2e2 !important;
+        }
+        .bg-info {
+            color: #e2e2fc !important;
+        }
+        .bg-info>a {
+            color: #e2e2fc !important;
+        }
+        .bg-success {
+            color: #e2fce2 !important;
+        }
+        .bg-success>a {
+            color: #e2fce2 !important;
+        }
+    </style>
+
+    <!-- Bootstrap core JavaScript
+================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="/static/js/popper.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
-    <!--
-    <script src="//oss.maxcdn.com/bootbox/4.4.0/bootbox.min.js"></script>
-    -->
-
-    <!-- WS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
+    <!-- Realtime charts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.min.js"></script>
+
+    <script>
+        function plot_init(divid, yname, utc_local) {
+            var g = new Dygraph(document.getElementById(divid), [],
+                {
+                    drawPoints: true,
+                    //ylabel: yname,
+                    title: yname,
+//                    valueRange: [0.0, 1.2],
+                    labels: ['Time', yname],
+                    labelsUTC: utc_local == 'UTC'
+                });
+            return g;
+        }
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -54,11 +146,11 @@
                 for (var key in data) {
                     // by default, the panel face is painted gray.
                     // this changes if any of the params is "critical" and colored
-                    var panel_color = "default";
+                    var panel_color = "secondary";
                     //document.write(key+'\n');
                     if (data.hasOwnProperty(key)) {
                         // make sure the panel is displayed:
-                        document.getElementById(key).style.display = "block";
+                        //document.getElementById(key).style.display = "block";
                         // global params
                         for (var key2 in data[key]["globals"]) {
                             if (data[key]["globals"].hasOwnProperty(key2)) {
@@ -71,7 +163,7 @@
                                     data[key]["globals"][key2][0];
                                 // color:
                                 document.getElementById(key + ":" + key2).className =
-                                    data[key]["globals"][key2][1];
+                                    "bg-" + data[key]["globals"][key2][1];
                                 // log if something turned red or yellow
 //                                if ((tmp_col != "danger" &&
 //                                        data[key]["globals"][key2][1] == "danger") ||
@@ -130,14 +222,15 @@
                                         var Xval = plots[divid][0].map(function(value, index) { return value[1]; });
                                         var Xmin = Math.min.apply(null, Xval);
                                         var Xmax = Math.max.apply(null, Xval);
-                                        plots[divid][1].updateOptions({ 'valueRange': [Xmin-0.1, Xmax+0.1] });
+//                                        plots[divid][1].updateOptions({ 'valueRange': [Xmin-0.1, Xmax+0.1] });
                                     }
                                 }
 
                                 // colorize panel face if param is critical
                                 if (data[key]["globals"][key2][5]) { // critical?
+//                                    console.log(key2, panel_color);
                                     switch (panel_color) {
-                                        case "default":
+                                        case "secondary":
                                             panel_color = data[key]["globals"][key2][1];
                                             break;
                                         case "success":
@@ -171,7 +264,7 @@
                                         data[key]["subs"][key2][key3][0];
                                     // color:
                                     document.getElementById(key+":"+key2+":"+key3).className =
-                                        data[key]["subs"][key2][key3][1];
+                                        'bg-' + data[key]["subs"][key2][key3][1];
                                     // log if something turned red or yellow
 //                                    if ((tmp_col != "danger" &&
 //                                            data[key]["subs"][key2][key3][1] == "danger") ||
@@ -229,13 +322,13 @@
                                             var Xval = plots[divid][0].map(function(value,index) { return value[1]; });
                                             var Xmin = Math.min.apply(null, Xval);
                                             var Xmax = Math.max.apply(null, Xval);
-                                            plots[divid][1].updateOptions({ 'valueRange': [Xmin-0.1, Xmax+0.1] });
+//                                            plots[divid][1].updateOptions({ 'valueRange': [Xmin-0.1, Xmax+0.1] });
                                         }
                                     }
                                     // colorize panel face if param is critical
                                     if (data[key]["subs"][key2][key3][5]) { // critical?
                                         switch (panel_color) {
-                                            case "default":
+                                            case "secondary":
                                                 panel_color = data[key]["subs"][key2][key3][1];
                                                 break;
                                             case "success":
@@ -256,10 +349,12 @@
                                 }
                             }
                         }
-                        // colorize panel face
-                        document.getElementById(key).className = "panel panel-" + panel_color;
-                        // colorize label face
-                        document.getElementById(key+"-label").className = "label label-" + panel_color;
+                        // colorize card header
+//                    console.log(key, panel_color);
+                        document.getElementById(key).className = "card-header p-0 pl-2 bg-" + panel_color;
+                        document.getElementById(key + "-card").className = "card rounded border border-" + panel_color;
+                        // colorize label
+                        document.getElementById(key + "-label").className = "badge badge-" + panel_color;
                     }
                 }
                 //document.write(data);
@@ -271,77 +366,23 @@
     <!-- Show/hide plots -->
     <script>
         function showHidePlots(key) {
-            if ($("[id='" + key + "-dropdown']").children("span").attr("class") == "glyphicon glyphicon-menu-up") {
-                $("[id='" + key + "-dropdown']").children("span").attr("class",
-                    "glyphicon glyphicon-menu-down");
+            if ($("[id='" + key + "-dropdown']").children("i").attr("class") == "fa fa-lg fa-angle-up") {
+                $("[id='" + key + "-dropdown']").children("i").attr("class",
+                    "fa fa-lg fa-angle-down");
                 document.getElementById(key+"-plots").style.display = "none";
             }
-            else { if ($("[id='" + key + "-dropdown']").children("span").attr("class") == "glyphicon glyphicon-menu-down") {
-                $("[id='" + key + "-dropdown']").children("span").attr("class",
-                    "glyphicon glyphicon-menu-up");
+            else { if ($("[id='" + key + "-dropdown']").children("i").attr("class") == "fa fa-lg fa-angle-down") {
+                $("[id='" + key + "-dropdown']").children("i").attr("class",
+                    "fa fa-lg fa-angle-up");
                 document.getElementById(key+"-plots").style.display = "block";
             } }
         }
         // minimize plots on body load
-        $( window ).load(setTimeout(function() {
+        $( document ).ready(setTimeout(function() {
             {% for system, item in skelet %}
-                showHidePlots("{{system}}");
+            showHidePlots("{{system}}");
             {% endfor %}
         }, 2000));
-    </script>
-
-    <!-- Logging -->
-    <script>
-        function logit(color, text) {
-            var timestamp = new Date();
-            var log_class = "";
-            switch (color) {
-                case "warning":
-                    log_class = "log-y";
-                    break;
-                case "danger":
-                    log_class = "log-r";
-                    break;
-            }
-            // too long, Johnny?
-            var nL = $("#log > *").length;
-            if (nL>100) {
-                $("#log").empty();
-            }
-            // publish:
-            $('#log').prepend("<p class=\"" + log_class + "\">"
-                + timestamp.toLocaleString() + "<br>" + text + "</p>");
-            // to beep or not to beep?
-            //beep(color);
-        }
-
-        // beep in case of emergency
-        function beep(cs) {
-            if (cs=="warning") {
-                document.getElementById('beep-warning').play();
-            }
-            else { if (cs=="danger") {
-                document.getElementById('beep-danger').play();
-            } }
-        }
-    </script>
-
-    <!-- Realtime charts -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
-
-    <script>
-        function plot_init(divid, yname, utc_local) {
-            var g = new Dygraph(document.getElementById(divid), [],
-                {
-                    drawPoints: true,
-                    //ylabel: yname,
-                    title: yname,
-//                    valueRange: [0.0, 1.2],
-                    labels: ['Time', yname],
-                    labelsUTC: utc_local == 'UTC'
-                });
-            return g;
-        }
     </script>
 
     <script>
@@ -350,109 +391,80 @@
         }
     </script>
 
-    <!--<style>-->
-        <!--::-webkit-scrollbar{-->
-            <!--background:transparent;-->
-        <!--}-->
-        <!--::-webkit-scrollbar-thumb{-->
-            <!--background-color: rgba(0,0,0,0);-->
-        <!--}-->
-    <!--</style>-->
-
 </head>
 
-<!-- Fixed navbar -->
-<nav class="navbar navbar-inverse navbar-fixed-top font-size-small" style="margin-bottom:-20px; padding-bottom:-20px">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed"
-                    data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Robo-AO</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Status</a></li>
-                <li><a href="/image">Images</a></li>
-                <li><a href="http://www.oir.caltech.edu/twiki_oir/bin/viewauth/Palomar/RoboAO/WebHome">Twiki</a></li>
-                <li class="dropdown" style="display:none">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/">Robo-AO</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbars">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Status<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/image">Images</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" target="_blank"
+                   href="http://www.oir.caltech.edu/twiki_oir/bin/viewauth/Palomar/RoboAO/WebHome">Twiki</a>
+            </li>
+        </ul>
     </div>
 </nav>
 
-<body role="document" style="padding-top:0px; padding-bottom:0px; margin-bottom:0px">
+<div class="container-fluid">
 
-    <div class="container" role="main">
+    <div class="template">
 
-        <div class="row">
+        {% for system, item in skelet %}
 
-            <!-- Status data -->
-            <div class="col-md-12">
-                <div class="page-header">
-                    <br>
-                    <h3>Robo-AO status</h3>
-                </div>
-
-                {% for system, item in skelet %}
-
-                <!-- System -->
-                <!-- <div class="panel panel-default" style="display:none;" id="{{ system }}"> -->
-                <div class="panel panel-default" style="display:block;" id="{{ system }}">
-                    <div class="panel-heading panel-heading-sm">
-                        <h3 class="panel-title">{{system}}</h3>
-                        <div class="pull-right" style="display:none; cursor:pointer;
-                    cursor:hand; margin-top:-12px;" id="{{system}}-dropdown"
-                             onClick="showHidePlots('{{system}}')" aria-label="plots">
-                            <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
-                        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="card" id="{{ system }}-card">
+                    <div class="card-header p-0 pl-2" id="{{ system }}">
+                        <span style="font-weight: 400; font-size: 0.9rem;">{{system}}</span>
+                        <a class="float-right pr-2 pb-0 mb-0" data-toggle="collapse" href="#plots"
+                           aria-expanded="false" aria-controls="collapseExample" id="{{system}}-dropdown"
+                           onClick="showHidePlots('{{system}}')"
+                           style="display:none; margin-top: -0.1rem;">
+                            <i class="fa fa-lg fa-angle-up" aria-hidden="true"></i>
+                        </a>
                     </div>
-                    <div class="panel-body panel-body-sm table-responsive">
-
-                        <table class="table table-condensed" style="margin-bottom:5px">
+                    <div class="card-body text-truncate p-0 pl-2 pr-2" style="display: inline-block">
+                        <table class="table table-sm table-condensed table-bordered"
+                               style="margin-bottom:5px;">
                             <thead>
 
                             <tr>
                                 {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                    <th colspan="{{ skelet[system]['globals'].keys()|length() }}"></th>
+                                <th colspan="{{ skelet[system]['globals'].keys()|length() }}"></th>
                                 {% endif %}
                                 {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['subs'] %}
-                                        <th colspan="{{ skelet[system]['subs'][key].keys()|length() }}"
-                                            style="text-align: center;">{{ key }}</th>
-                                    {% endfor %}
+                                {% for key, item in skelet[system]['subs'] %}
+                                <th colspan="{{ skelet[system]['subs'][key].keys()|length() }}"
+                                    style="text-align: center;">{{ key }}</th>
+                                {% endfor %}
                                 {% endif %}
                             </tr>
 
                             <tr>
                                 {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['globals'] %}
-                                        <th>{{ key }}</th>
-                                    {% endfor %}
+                                {% for key, item in skelet[system]['globals'] %}
+                                <th>{{ key }}</th>
+                                {% endfor %}
                                 {% endif %}
                                 {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['subs'] %}
-                                        {% for key2, item in skelet[system]['subs'][key] %}
-                                            <th>{{ key2 }}</th>
-                                        {% endfor %}
-                                    {% endfor %}
+                                {% for key, item in skelet[system]['subs'] %}
+                                {% for key2, item in skelet[system]['subs'][key] %}
+                                <th>{{ key2 }}</th>
+                                {% endfor %}
+                                {% endfor %}
                                 {% endif %}
                             </tr>
 
@@ -462,25 +474,24 @@
                             <tr>
                                 <!-- Global params -->
                                 {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['globals'] %}
-                                        <td id="{{system}}:{{key}}"></td>
-                                    {% endfor %}
+                                {% for key, item in skelet[system]['globals'] %}
+                                <td id="{{system}}:{{key}}"></td>
+                                {% endfor %}
                                 {% endif %}
 
                                 <!-- Data Tables  -->
                                 {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                    {% for key, item in skelet[system]['subs'] %}
-                                        {% for key2, item in skelet[system]['subs'][key] %}
-                                            <td id="{{system}}:{{key}}:{{key2}}"></td>
-                                        {% endfor %}
-                                    {% endfor %}
+                                {% for key, item in skelet[system]['subs'] %}
+                                {% for key2, item in skelet[system]['subs'][key] %}
+                                <td id="{{system}}:{{key}}:{{key2}}"></td>
+                                {% endfor %}
+                                {% endfor %}
                                 {% endif %}
 
                             </tr>
                             </tbody>
 
                         </table>
-
 
                         <hr style="margin:0 -10px 0 -10px;">
 
@@ -491,32 +502,26 @@
                                 <!-- Placeholder for da plots -->
                             </div>
                         </div>
-
                     </div>
                 </div>
-
-                {% endfor %}
-
-                <br><br>
-
             </div>
-
-            <!-- Colored labels -->
-            <div id="col-log-2" style="background:#0f1420;
-                color:#222; z-index:200; overflow-y: scroll; overflow-x: hidden;
-                border-top: solid white 2px;
-                height: 28px; width:100%; position: fixed; right: 0px; bottom:0px;
-                padding: 0 0 0 5px; margin:0px; line-height:0.8;">
-                <br>
-                {% for system, item in skelet %}
-                    <span class="label label-default" id="{{ system }}-label"
-                          style="font-size: 10px; font-weight:200; cursor:pointer; color:#222 !important;"
-                          onclick="scrollTo('{{system}}')">{{system}}</span>&nbsp;
-                {% endfor %}
-            </div>
-
         </div>
+
+        {% endfor %}
+
     </div>
+
+</div><!-- /.container -->
+
+<footer class="footer">
+    <div class="container-fluid">
+        {% for system, item in skelet %}
+        <span class="badge badge-light" id="{{ system }}-label"
+              style="font-size: 0.7rem; font-weight:200; cursor:pointer;"
+              onclick="scrollTo('{{system}}')">{{system}}</span>&nbsp;
+        {% endfor %}
+    </div>
+</footer>
 
 </body>
 </html>
