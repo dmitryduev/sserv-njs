@@ -130,12 +130,12 @@
     </script>
 
     <script>
+        // keep plots in one place:
+        var plots = {};
+
         $(document).ready(function() {
 
             var socket = io();
-
-            // keep plots in one place:
-            var plots = {};
 
             // received stuff from status.py
             socket.on('telemetry', function(msg) {
@@ -375,6 +375,9 @@
                 $("[id='" + key + "-dropdown']").children("i").attr("class",
                     "fa fa-lg fa-angle-up");
                 document.getElementById(key+"-plots").style.display = "block";
+                $("[id='" + key + "-plots-container']").children("div").each(function(){
+                    plots[$(this).attr('id')][1].resize();
+                });
             } }
         }
         // minimize plots on body load
@@ -444,28 +447,28 @@
 
                             <tr>
                                 {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                <th colspan="{{ skelet[system]['globals'].keys()|length() }}"></th>
+                                    <th colspan="{{ skelet[system]['globals'].keys()|length() }}"></th>
                                 {% endif %}
                                 {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                {% for key, item in skelet[system]['subs'] %}
-                                <th colspan="{{ skelet[system]['subs'][key].keys()|length() }}"
-                                    style="text-align: center;">{{ key }}</th>
-                                {% endfor %}
+                                    {% for key, item in skelet[system]['subs'] %}
+                                        <th colspan="{{ skelet[system]['subs'][key].keys()|length() }}"
+                                            style="text-align: center;">{{ key }}</th>
+                                    {% endfor %}
                                 {% endif %}
                             </tr>
 
                             <tr>
                                 {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                {% for key, item in skelet[system]['globals'] %}
-                                <th>{{ key }}</th>
-                                {% endfor %}
+                                    {% for key, item in skelet[system]['globals'] %}
+                                        <th>{{ key }}</th>
+                                    {% endfor %}
                                 {% endif %}
                                 {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                {% for key, item in skelet[system]['subs'] %}
-                                {% for key2, item in skelet[system]['subs'][key] %}
-                                <th>{{ key2 }}</th>
-                                {% endfor %}
-                                {% endfor %}
+                                    {% for key, item in skelet[system]['subs'] %}
+                                        {% for key2, item in skelet[system]['subs'][key] %}
+                                            <th>{{ key2 }}</th>
+                                        {% endfor %}
+                                    {% endfor %}
                                 {% endif %}
                             </tr>
 
@@ -475,18 +478,18 @@
                             <tr>
                                 <!-- Global params -->
                                 {% if skelet[system]['globals'].keys()|length() > 0 %}
-                                {% for key, item in skelet[system]['globals'] %}
-                                <td id="{{system}}:{{key}}"></td>
-                                {% endfor %}
+                                    {% for key, item in skelet[system]['globals'] %}
+                                        <td id="{{system}}:{{key}}"></td>
+                                    {% endfor %}
                                 {% endif %}
 
                                 <!-- Data Tables  -->
                                 {% if skelet[system]['subs'].keys()|length() > 0 %}
-                                {% for key, item in skelet[system]['subs'] %}
-                                {% for key2, item in skelet[system]['subs'][key] %}
-                                <td id="{{system}}:{{key}}:{{key2}}"></td>
-                                {% endfor %}
-                                {% endfor %}
+                                    {% for key, item in skelet[system]['subs'] %}
+                                        {% for key2, item in skelet[system]['subs'][key] %}
+                                            <td id="{{system}}:{{key}}:{{key2}}"></td>
+                                        {% endfor %}
+                                    {% endfor %}
                                 {% endif %}
 
                             </tr>
