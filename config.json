@@ -168,10 +168,14 @@
             "Open": [[28], {}, [false], false],
             "Moving": [[29], {}, [false], false]
         },
+        "Other": {
+            "Platform": [[30], {}, [false], false],
+            "Awning": [[31], {}, [false], false]
+        },
         "Fans": {
-            "Building": [[30], {}, [false], false],
-            "Telescope": [[31], {}, [false], false],
-            "Woffer": [[32], {}, [false], false]
+            "Building": [[32], {}, [false], false],
+            "Telescope": [[33], {}, [false], false],
+            "Woffer": [[34], {}, [false], false]
         }
     },
     "Dew point data": {
