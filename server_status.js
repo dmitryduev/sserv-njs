@@ -30,7 +30,6 @@ nunjucks.installJinjaCompat();
 
 // serve static files:
 app.use('/static', express.static('public'));
-app.use('/st', express.static('st'));
 
 // get/parse config.json
 var config_file = './config.json';
