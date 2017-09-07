@@ -43,6 +43,45 @@ if (process.argv.length > 2) {
 }
 var config = require(config_file);
 
+// get/parse logs.json
+var logs_config_file = './logs.json';
+if (process.argv.length > 3) {
+    if (process.argv[3][0] != '/' && process.argv[3][0] != '.') {
+        config_file = './' + process.argv[3];
+    }
+    else {
+        config_file = process.argv[3]
+    }
+}
+
+var logs_last_night = require(logs_config_file);
+
+// get log file names from last night:
+function lastNightNames(logs_last_night) {
+    var path = logs_last_night['Last night']['location'];
+    var cfiles = fs.readdirSync(path);
+    var filelist = [];
+    cfiles.forEach(function(file) {
+        if (file.endsWith('.log') || file.endsWith('.dat')) {
+            filelist.push(file);
+        }
+    });
+    return filelist;
+}
+
+// load log file from disk on request:
+io.on('connection', function(socket){
+    socket.on('get_log_file_last_night', function(file_name){
+        fs.readFile(logs_last_night['Last night']['location'] + file_name, 'utf8', function(err, data) {
+            if (err) {
+                console.log('failed to fetch '+file_name);
+                io.emit('post_log_file_last_night', { id: file_name, data: 'Error!' });
+            }
+            io.emit('post_log_file_last_night', { id: file_name, data: data });
+        });
+    });
+});
+
 // build a skeleton to make index.html from a template
 function skeleton(config) {
     var skelet = {};
@@ -231,12 +270,20 @@ app.get('/', function(req, res){
     //console.log(skelet);
     // create html from a template and send it to user:
     //res.sendFile('/Users/dmitryduev/web/sserv-njs/templates/index.html');
-    res.render('status.html', {skelet:skelet});
+    res.render('status.html', {skelet: skelet});
 });
 
 // run image page
 app.get('/image', function(req, res){
     res.render('image.html');
+});
+
+// run log page
+app.get('/log', function(req, res){
+    // get file names:
+    var log_names_last_night = lastNightNames(logs_last_night);
+    // var log_names_last_night = ['vicd.log', 'adcd.log'];
+    res.render('log.html', {log_names_last_night: log_names_last_night});
 });
 
 // io.on('connection', function(socket){
@@ -295,8 +342,8 @@ Loop();
 // Stream images
 
 // generate png files
-var cmd = '/home/roboao/Work/dima/sserv-njs/lib/png2 /home/roboao/Work/dima/sserv-njs/public /home/roboao/Status';
-// var cmd = 'ls';
+// var cmd = '/home/roboao/Work/dima/sserv-njs/lib/png2 /home/roboao/Work/dima/sserv-njs/public /home/roboao/Status';
+var cmd = 'ls';
 
 // telemetry streaming loop
 function LoopImg() {
