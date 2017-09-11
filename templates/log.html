@@ -16,7 +16,9 @@
 
     <!-- Custom styles for this page -->
     <style>
-
+        div::-webkit-scrollbar {
+            display: none;
+        }
         body {
             padding-top: 1rem;
             font-size: 0.9rem;
@@ -299,7 +301,7 @@
                                 </a>
                             </div>
                             <div class="card-body text-truncate p-0 pl-2 pr-2" id="{{ lfn }}-panel"
-                                 style="max-height:15rem; display: inline-block; overflow-x: hidden;">
+                                 style="max-height:15rem; display: inline-block; overflow-x: scroll;">
                                 <p style="margin-top:10px;" id="{{ lfn }}-loading">
                                     Loading...&nbsp;<i class="fa fa-gear fa-spin" style="font-size:24px"></i>
                                 </p>
