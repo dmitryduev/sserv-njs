@@ -216,11 +216,13 @@
                 var stream = ss.createStream();
                 ss(socket).emit('get_log_file_last_night', stream, {file_name: id});
                 var code_block = document.getElementById(id+'-code');
+                var file_content = '';
                 stream.on('data', function (chunk) {
-//                    console.log(chunk.toString());
-                    code_block.innerHTML += chunk.toString();
+//                    code_block.innerHTML += chunk.toString();
+                    file_content += chunk.toString();
                 });
                 stream.on('end', function() {
+                    code_block.innerHTML += file_content;
                     document.getElementById(id+'-loading').style.display = "none";
                 });
 
