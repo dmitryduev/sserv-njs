@@ -215,9 +215,10 @@
             if (document.getElementById(id+'-loading').style.display != "none") {
                 var stream = ss.createStream();
                 ss(socket).emit('get_log_file_last_night', stream, {file_name: id});
+                var code_block = document.getElementById(id+'-code');
                 stream.on('data', function (chunk) {
 //                    console.log(chunk.toString());
-                    document.getElementById(id+'-code').innerHTML += chunk.toString();
+                    code_block.innerHTML += chunk.toString();
                 });
                 stream.on('end', function() {
                     document.getElementById(id+'-loading').style.display = "none";
