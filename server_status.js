@@ -9,12 +9,13 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var ss = require('socket.io-stream');
 var fs = require('fs'); // for reading local files
 var nunjucks = require('nunjucks'); // template rendering
 const exec = require('child_process').exec;
 
-var ncp = require('ncp').ncp;
-ncp.limit = 8;
+// var ncp = require('ncp').ncp;
+// ncp.limit = 8;
 
 // flavicon
 //var favicon = require('serve-favicon');
@@ -47,10 +48,10 @@ var config = require(config_file);
 var logs_config_file = './logs.json';
 if (process.argv.length > 3) {
     if (process.argv[3][0] != '/' && process.argv[3][0] != '.') {
-        config_file = './' + process.argv[3];
+        logs_config_file = './' + process.argv[3];
     }
     else {
-        config_file = process.argv[3]
+        logs_config_file = process.argv[3]
     }
 }
 
@@ -70,15 +71,23 @@ function lastNightNames(logs_last_night) {
 }
 
 // load log file from disk on request:
-io.on('connection', function(socket){
-    socket.on('get_log_file_last_night', function(file_name){
-        fs.readFile(logs_last_night['Last night']['location'] + file_name, 'utf8', function(err, data) {
-            if (err) {
-                console.log('failed to fetch '+file_name);
-                io.emit('post_log_file_last_night', { id: file_name, data: 'Error!' });
-            }
-            io.emit('post_log_file_last_night', { id: file_name, data: data });
-        });
+io.on('connection', function(socket) {
+    // socket.on('get_log_file_last_night', function(file_name){
+    //     fs.readFile(logs_last_night['Last night']['location'] + file_name, 'utf8', function(err, data) {
+    //         if (err) {
+    //             console.log('failed to fetch '+file_name);
+    //             io.emit('post_log_file_last_night', { id: file_name, data: 'Error!' });
+    //         }
+    //         io.emit('post_log_file_last_night', { id: file_name, data: data });
+    //     });
+    // });
+    ss(socket).on('get_log_file_last_night', function(stream, data) {
+        // var filename = path.basename(file_name);
+        // stream.pipe(fs.createWriteStream(filename));
+        // console.log(data.file_name);
+        // fs.createReadStream(logs_last_night['Last night']['location'] + data.file_name).setEncoding('utf8').pipe(stream);
+        fs.createReadStream(logs_last_night['Last night']['location'] + data.file_name).pipe(stream);
+        // console.log('lala');
     });
 });
 
@@ -312,15 +321,15 @@ http.listen(8080, function(){
 //     fs.mkdirSync('telemetry');
 // }
 
-function cpLoop(source, destination) {
-    ncp(source, destination, function (err) {
-        if (err) {
-            return console.error(err);
-        }
-        // console.log('done!');
-    });
-    setTimeout(function() {cpLoop(source, destination)}, 700);
-}
+// function cpLoop(source, destination) {
+//     ncp(source, destination, function (err) {
+//         if (err) {
+//             return console.error(err);
+//         }
+//         // console.log('done!');
+//     });
+//     setTimeout(function() {cpLoop(source, destination)}, 700);
+// }
 // cpLoop('/Users/dmitryduev/web/sserv/telemetry/', 'telemetry/');
 // cpLoop('/home/roboao/Status/', 'telemetry/');
 

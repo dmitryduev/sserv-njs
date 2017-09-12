@@ -163,6 +163,7 @@
     <script src="/static/js/popper.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
+    <script src="/static/js/socket.io-stream.js"></script>
 
     <!-- Menu Toggle Script -->
     <script>
@@ -183,14 +184,14 @@
         var socket = io();
 
         $(document).ready(function() {
-            socket.on('post_log_file_last_night', function (response) {
-                // load only once!
-                if (document.getElementById(response.id+'-loading').style.display != "none") {
-                    console.log('loading '+response.id);
-                    document.getElementById(response.id+'-code').innerHTML = response.data;
-                    document.getElementById(response.id+'-loading').style.display = "none";
-                }
-            });
+//            socket.on('post_log_file_last_night', function (response) {
+//                // load only once!
+//                if (document.getElementById(response.id+'-loading').style.display != "none") {
+//                    console.log('loading '+response.id);
+//                    document.getElementById(response.id+'-code').innerHTML = response.data;
+//                    document.getElementById(response.id+'-loading').style.display = "none";
+//                }
+//            });
         });
     </script>
 
@@ -212,7 +213,16 @@
             var $input = $(obj);
             // fetch log file from server, but only once
             if (document.getElementById(id+'-loading').style.display != "none") {
-                socket.emit('get_log_file_last_night', id);
+                var stream = ss.createStream();
+                ss(socket).emit('get_log_file_last_night', stream, {file_name: id});
+                stream.on('data', function (chunk) {
+//                    console.log(chunk.toString());
+                    document.getElementById(id+'-code').innerHTML += chunk.toString();
+                });
+                stream.on('end', function() {
+                    document.getElementById(id+'-loading').style.display = "none";
+                });
+
             }
             if ($input.prop('checked')) document.getElementById(id+'-container').style.display = "block";
             else document.getElementById(id+'-container').style.display = "none";
@@ -302,10 +312,11 @@
                             </div>
                             <div class="card-body text-truncate p-0 pl-2 pr-2" id="{{ lfn }}-panel"
                                  style="max-height:15rem; display: inline-block; overflow: auto;">
-                                <p style="margin-top:10px;" id="{{ lfn }}-loading">
-                                    Loading...&nbsp;<i class="fa fa-gear fa-spin" style="font-size:24px"></i>
-                                </p>
+
                                 <pre><code id="{{ lfn }}-code" class="empty"></code></pre>
+                            </div>
+                            <div class="card-footer p-0 pl-2 text-muted" id="{{ lfn }}-loading">
+                                    Loading...&nbsp;<i class="fa fa-gear fa-spin" style="font-size: 1rem;"></i>
                             </div>
                         </div>
                     </div>
