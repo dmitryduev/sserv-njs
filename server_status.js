@@ -438,8 +438,8 @@ Loop();
 // Stream images
 
 // generate png files
-// var cmd = '/home/roboao/Work/dima/sserv-njs/lib/png2 /home/roboao/Work/dima/sserv-njs/public /home/roboao/Status';
-var cmd = 'ls';
+var cmd = '/home/roboao/Work/dima/sserv-njs/lib/png2 /home/roboao/Work/dima/sserv-njs/public /home/roboao/Status';
+// var cmd = 'ls';
 
 // telemetry streaming loop
 function LoopImg() {
