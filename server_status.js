@@ -10,6 +10,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ss = require('socket.io-stream');
+var chokidar = require('chokidar');
 var fs = require('fs'); // for reading local files
 var nunjucks = require('nunjucks'); // template rendering
 const exec = require('child_process').exec;
@@ -45,7 +46,8 @@ if (process.argv.length > 2) {
 var config = require(config_file);
 
 // get/parse logs.json
-var logs_config_file = './logs.json';
+var logs_config_file = './logs.json';  // default to try out
+// or if specified by user as command line option:
 if (process.argv.length > 3) {
     if (process.argv[3][0] != '/' && process.argv[3][0] != '.') {
         logs_config_file = './' + process.argv[3];
@@ -55,39 +57,136 @@ if (process.argv.length > 3) {
     }
 }
 
-var logs_last_night = require(logs_config_file);
+// read in the config file for logs
+var logs_config = require(logs_config_file);
 
-// get log file names from last night:
-function lastNightNames(logs_last_night) {
-    var path = logs_last_night['Last night']['location'];
-    var cfiles = fs.readdirSync(path);
-    var filelist = [];
-    cfiles.forEach(function(file) {
-        if (file.endsWith('.log') || file.endsWith('.dat')) {
-            filelist.push(file);
+// get log file names for rendering the log page at init
+function logNames(logs_config) {
+    var path;
+    var filelist = {};
+    // iterate over specified sorts of logs
+    for (var key in logs_config) {
+        if (logs_config.hasOwnProperty(key)) {
+            // get location
+            path = logs_config[key]['location'];
+            // get all files in the directory
+            var cfiles = fs.readdirSync(path);
+            // note
+            // if type is 'dynamic', will watch changes in tail -f manner
+            // if type is 'static' will just open log files in new window
+            filelist[key] = {'type': logs_config[key]['type'],
+                             'files': []};
+            cfiles.forEach(function(file) {
+                // file has right extension?
+                var right_extension = false;
+                for (var i = 0; i < logs_config[key]['extensions'].length; i++) {
+                    right_extension = right_extension || file.endsWith(logs_config[key]['extensions'][i]);
+                }
+                // push to filelist if has right extension and not invisible
+                if (right_extension && !file.startsWith('.')) {
+                    filelist[key]['files'].push(file);
+                }
+            });
         }
-    });
+    }
+
     return filelist;
 }
 
+// serve 'static' log files:
+for (var key in logs_config) {
+    if (logs_config.hasOwnProperty(key)) {
+        if (logs_config[key]['type'] == 'static') {
+            app.use('/' + key.replace(/\s+/g, '-').toLowerCase(), express.static(logs_config[key]['location']));
+            // console.log();
+        }
+    }
+}
+
+// serve 'dynamic' log files:
+var watchers = {};
+for (var key in logs_config) {
+    if (logs_config.hasOwnProperty(key)) {
+        if (logs_config[key]['type'] == 'dynamic') {
+            // wildcards to watch over:
+            var wildcards = [];
+            for (var i = 0; i < logs_config[key]['extensions'].length; i++) {
+                wildcards.push(logs_config[key]['location'] + '*.' + logs_config[key]['extensions'][i]);
+            }
+            // Initialize watcher
+            // console.log(wildcards);
+            var watcher = chokidar.watch(wildcards, {
+                ignored: /(^|[\/\\])\../,
+                persistent: true
+            });
+            watchers[key] = watcher;
+        }
+    }
+}
+// Add event listeners. see https://github.com/paulmillr/chokidar for examples
+// io.on('connection', function(socket) {
+    var dynamic_logs = {};
+    for (var key in watchers) {
+        // key: log group
+        if (watchers.hasOwnProperty(key)) {
+            // init container
+            dynamic_logs[key] = {};
+            // started watching or new log file appeared
+            watchers[key].on('add', function (path, stats) {
+                // console.log(path, ' added. Size:', stats.size);
+                var log_name = path.replace(/^.*[\\\/]/, '');
+                // console.log(log_name);
+                var prev = stats.size;
+                var curr = stats.size;
+                dynamic_logs[key][log_name] = {'prev': prev, 'curr': curr};
+                io.emit('add_log', {log_group: key.replace(/\s+/g, '-').toLowerCase(), log_name: log_name});
+            });
+            // log file changed
+            watchers[key].on('change', function (path, stats) {
+                // console.log(path, ' changed. Size:', stats.size);
+                var log_name = path.replace(/^.*[\\\/]/, '');
+                // new file size:
+                dynamic_logs[key][log_name]['curr'] = stats.size;
+                // current size less than previous? that's bad, fix that!
+                if (dynamic_logs[key][log_name]['curr'] < dynamic_logs[key][log_name]['prev']) {
+                    dynamic_logs[key][log_name]['prev'] = dynamic_logs[key][log_name]['curr'];
+                }
+                // no? stream the new stuff then!
+                else {
+                    // create read stream:
+                    var rstream = fs.createReadStream(path, {encoding: 'utf8',
+                                                             start: dynamic_logs[key][log_name]['prev'] - 1,
+                                                             end: dynamic_logs[key][log_name]['curr'] - 1});
+                    rstream.on('data', function (chunk) {
+                        var lines = chunk.split("\n");
+                        for (var i = 0; i < lines.length; i++) {
+                            if (lines[i]) {
+                                // emit socket.io event to be caught by log.html
+                                io.emit('new_log_line', {log_group: key.replace(/\s+/g, '-').toLowerCase(),
+                                    log_name: log_name, line: lines[i]});
+                                // console.log(lines[i]);
+                            }
+                        }
+                    });
+                    // update previous file size once done:
+                    dynamic_logs[key][log_name]['prev'] = dynamic_logs[key][log_name]['curr'];
+                }
+            });
+            // log file deleted
+            watchers[key].on('unlink', function (path) {
+                // console.log(path, ' removed');
+                var log_name = path.replace(/^.*[\\\/]/, '');
+                io.emit('remove_log', {log_group: key.replace(/\s+/g, '-').toLowerCase(), log_name: log_name});
+            });
+        }
+    }
+// });
+
 // load log file from disk on request:
 io.on('connection', function(socket) {
-    // socket.on('get_log_file_last_night', function(file_name){
-    //     fs.readFile(logs_last_night['Last night']['location'] + file_name, 'utf8', function(err, data) {
-    //         if (err) {
-    //             console.log('failed to fetch '+file_name);
-    //             io.emit('post_log_file_last_night', { id: file_name, data: 'Error!' });
-    //         }
-    //         io.emit('post_log_file_last_night', { id: file_name, data: data });
-    //     });
-    // });
     ss(socket).on('get_log_file_last_night', function(stream, data) {
-        // var filename = path.basename(file_name);
-        // stream.pipe(fs.createWriteStream(filename));
         // console.log(data.file_name);
-        // fs.createReadStream(logs_last_night['Last night']['location'] + data.file_name).setEncoding('utf8').pipe(stream);
         fs.createReadStream(logs_last_night['Last night']['location'] + data.file_name).pipe(stream);
-        // console.log('lala');
     });
 });
 
@@ -290,23 +389,11 @@ app.get('/image', function(req, res){
 // run log page
 app.get('/log', function(req, res){
     // get file names:
-    var log_names_last_night = lastNightNames(logs_last_night);
-    // var log_names_last_night = ['vicd.log', 'adcd.log'];
-    res.render('log.html', {log_names_last_night: log_names_last_night});
+    var log_names = logNames(logs_config);
+    // console.log(log_names);
+    // TODO: move all configs to one file, make things customizable!
+    res.render('log.html', {log_names: log_names, max_log_lines: 500});
 });
-
-// io.on('connection', function(socket){
-    // console.log('a user connected');
-    // socket.on('disconnect', function(){
-    //     console.log('user disconnected');
-    // });
-    /*
-    socket.on('chat message', function(msg){
-        console.log('message: ' + msg);
-        io.emit('chat message', msg);
-    });
-    */
-// });
 
 
 // start listening
@@ -351,8 +438,8 @@ Loop();
 // Stream images
 
 // generate png files
-var cmd = '/home/roboao/Work/dima/sserv-njs/lib/png2 /home/roboao/Work/dima/sserv-njs/public /home/roboao/Status';
-// var cmd = 'ls';
+// var cmd = '/home/roboao/Work/dima/sserv-njs/lib/png2 /home/roboao/Work/dima/sserv-njs/public /home/roboao/Status';
+var cmd = 'ls';
 
 // telemetry streaming loop
 function LoopImg() {

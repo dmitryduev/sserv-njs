@@ -13,6 +13,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <!-- Custom styles for this page -->
     <style>
@@ -85,12 +86,13 @@
             padding: 0;
             padding-top: 0.5rem;
             list-style: none;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 200;
         }
 
         .sidebar-nav li {
-            text-indent: 0.3rem;
-            line-height: 30px;
+            text-indent: 0.5rem;
+            line-height: 1.2rem;
             color: #999999;
         }
 
@@ -111,9 +113,10 @@
         }
 
         .sidebar-nav>.sidebar-brand {
-            height: 65px;
-            font-size: 18px;
-            line-height: 60px;
+            height: 1.3rem;
+            font-size: 1rem;
+            line-height: 1.1rem;
+            width:90%;
         }
 
         .sidebar-nav>.sidebar-brand a {
@@ -154,12 +157,20 @@
         .bg-info>a {
             color: #e2e2fc !important;
         }
+
+        .resizable:active {
+            height: 0;
+            width: 0;
+        }
     </style>
 
     <!-- Core JavaScript libs -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"-->
+            <!--integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"-->
+            <!--crossorigin="anonymous"></script>-->
+    <!--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>-->
     <script src="/static/js/popper.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
@@ -182,16 +193,17 @@
     <script>
 
         var socket = io();
-
+        // arrow up/down on show/hide
         $(document).ready(function() {
-//            socket.on('post_log_file_last_night', function (response) {
-//                // load only once!
-//                if (document.getElementById(response.id+'-loading').style.display != "none") {
-//                    console.log('loading '+response.id);
-//                    document.getElementById(response.id+'-code').innerHTML = response.data;
-//                    document.getElementById(response.id+'-loading').style.display = "none";
-//                }
-//            });
+            {% for log_group in log_names.keys() %}
+                {% set log_group_id = log_group | replace(' ', '-') | lower %}
+                $('#{{ log_group_id }}').on('hide.bs.collapse', function () {
+                    $("[id={{ log_group_id }}-dropdown]").children("i").attr("class", "fa fa-lg fa-angle-down float-right");
+                });
+                $('#{{ log_group_id }}').on('show.bs.collapse', function () {
+                    $("[id={{ log_group_id }}-dropdown]").children("i").attr("class", "fa fa-lg fa-angle-up float-right");
+                });
+            {% endfor %}
         });
     </script>
 
@@ -211,25 +223,109 @@
         // toggle cards
         function toggle(id, obj) {
             var $input = $(obj);
-            // fetch log file from server, but only once
-            if (document.getElementById(id+'-loading').style.display != "none") {
-                var stream = ss.createStream();
-                ss(socket).emit('get_log_file_last_night', stream, {file_name: id});
-                var code_block = document.getElementById(id+'-code');
-                var file_content = '';
-                stream.on('data', function (chunk) {
-//                    code_block.innerHTML += chunk.toString();
-                    file_content += chunk.toString();
-                });
-                stream.on('end', function() {
-                    code_block.innerHTML += file_content;
-                    document.getElementById(id+'-loading').style.display = "none";
-                });
-
-            }
             if ($input.prop('checked')) document.getElementById(id+'-container').style.display = "block";
             else document.getElementById(id+'-container').style.display = "none";
         }
+
+        // display/manage logs
+        $(document).ready(function() {
+            // log file created
+            socket.on('add_log', function(data) {
+                var _id = data.log_group + '-' + data.log_name;
+                // stuff to create:
+                var container = document.getElementById(_id+'-container');
+                var menu_item = document.getElementById(_id+'-menu-item');
+                // workaround to keep checkboxes checked:
+                var checked_boxes = [];
+                $("input:checked").each(function(){
+                    checked_boxes.push($(this).attr('id'));
+                });
+                console.log(checked_boxes);
+                // create:
+                if (container == null && menu_item == null) {
+                    // menu item:
+                    document.getElementById(data.log_group).innerHTML +=
+                        '<li id="' + data.log_group + '-' + data.log_name + '-menu-item">\n' +
+                        '<a href="#">\n' +
+                        '<div class="form-check m-0 p-0">\n' +
+                        '<label class="form-check-label">\n' +
+                        '<input class="form-check-input" type="checkbox" value=""\n' +
+                        'id="' + data.log_group + '-' + data.log_name + '-checkbox"' +
+                        'onclick="toggle(\'' + data.log_group + '-' + data.log_name +
+                        '\', this)">\n' +
+                        data.log_name + '\n' +
+                        '</label>\n' +
+                        '</div>\n' +
+                        '</a>\n' +
+                        '</li>';
+                    // container:
+                    document.getElementById(data.log_group+'-body').innerHTML +=
+                        '<div class="row mb-2" id="' + data.log_group + '-' + data.log_name +
+                        '-container" style="display: none;">\n' +
+                        '<div class="col">\n' +
+                        '<div class="card border border-info" id="' +
+                        data.log_group + '-' + data.log_name + '-card">\n' +
+                        '<div class="card-header p-0 pl-2 bg-info" id="">\n' +
+                        '<span style="font-weight: 400; font-size: 0.9rem;">' + data.log_name + '</span>\n' +
+                        '<a class="float-right pr-2 pb-0 mb-0" data-toggle="collapse" href="#"\n' +
+                        'aria-expanded="false" aria-controls="collapseExample"\n' +
+                        'id="' + data.log_group + '-' + data.log_name + '-dropdown"\n' +
+                        'onClick="showHidePanel(\'' + data.log_group + '-' + data.log_name + '\')"\n' +
+                        'style="margin-top: -0.1rem;">\n' +
+                        '<i class="fa fa-lg fa-angle-up" aria-hidden="true"></i>\n' +
+                        '</a>\n' +
+                        '</div>\n' +
+                        '<div class="card-body text-truncate p-0 pl-2 pr-2"\n' +
+                        'id="' + data.log_group + '-' + data.log_name + '-panel"\n' +
+                        'style="max-height: 500px; height: 100px; ' +
+                        'display: inline-block; overflow: auto; resize: vertical;">\n' +
+                        '<pre><code id="' + data.log_group + '-' + data.log_name
+                        +'-code" class="empty"></code></pre>\n' +
+                        '</div>\n' +
+                        '</div>\n' +
+                        '</div>\n' +
+                        '</div>';
+                }
+                // workaround to keep checkboxes checked: check the checkboxes back
+                for (var i = 0; i < checked_boxes.length; i++) {
+                    document.getElementById(checked_boxes[i])["checked"] = "checked";
+                }
+            });
+            // new log line
+            socket.on('new_log_line', function(data) {
+                var _id = data.log_group + '-' + data.log_name;
+                // find the right code block
+                var code_block = document.getElementById(_id+'-code');
+                // compute current number of lines in code block:
+                var n_lines = code_block.innerHTML.split("\n").length;
+                // limit number of lines to show, not to flood the browser:
+                if (n_lines > {{ max_log_lines }}) {
+                    // crop the first line
+                    code_block.innerHTML = code_block.innerHTML.slice(code_block.innerHTML.indexOf('\n') + 1)
+                }
+                // add the new line:
+                code_block.innerHTML += $.trim(data.line.toString()) + '\n';
+                // scroll div to bottom:
+                var panel = document.getElementById(_id+'-panel');
+                panel.scrollTop = panel.scrollHeight;
+            });
+            // log file removed
+            socket.on('remove_log', function(data) {
+                var _id = data.log_group + '-' + data.log_name;
+                // find stuff to remove:
+                var container = document.getElementById(_id+'-container');
+                var menu_item = document.getElementById(_id+'-menu-item');
+                // remove:
+                try {
+                    container.parentNode.removeChild(container);
+                }
+                finally {}
+                try {
+                    menu_item.parentNode.removeChild(menu_item);
+                }
+                finally {}
+            });
+        });
     </script>
 
 </head>
@@ -268,25 +364,47 @@
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <!--<li class="sidebar-brand">-->
-                    <!--<a href="#">-->
-                        <!--Logs-->
-                    <!--</a>-->
-                <!--</li>-->
-                {% for lfn in log_names_last_night %}
-                    <li>
-                        <a href="#">
-                            <div class="form-check m-0 p-0">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" value=""
-                                           onclick="toggle('{{ lfn }}', this)">
-                                    {{ lfn }}
-                                </label>
-                            </div>
+            <ul class="sidebar-nav ml-2">
+                <!-- Log lists -->
+                {% for log_group in log_names.keys() %}
+                    {% set log_group_id = log_group | replace(' ', '-') | lower %}
+                    <li class="sidebar-brand m-0 mt-2 p-0">
+                        <a data-toggle="collapse" href="#{{ log_group_id }}"
+                           aria-expanded="true" aria-controls="{{ log_group_id }}"
+                           id="{{ log_group_id }}-dropdown"
+                           style="margin-top: -0.1rem;">
+                            {{ log_group }}
+                            <i class="fa fa-lg fa-angle-up float-right"></i>
                         </a>
                     </li>
+                    <div class="collapse multi-collapse show" id="{{ log_group_id }}">
+                        {% for lfn in log_names[log_group]['files'] %}
+                        <li id="{{ log_group_id }}-{{ lfn }}-menu-item">
+                            <!-- Dynamic logs go with checkboxes to toggle display card -->
+                            {% if log_names[log_group]['type'] == 'dynamic' %}
+                                <a href="#">
+                                    <div class="form-check m-0 p-0">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                   onclick="toggle('{{ log_group_id }}-{{ lfn }}', this)"
+                                                   id="{{ log_group_id }}-{{ lfn }}-checkbox">
+                                            {{ lfn }}
+                                        </label>
+                                    </div>
+                                </a>
+                            {% endif %}
+                            <!-- Static logs are open in new tab -->
+                            {% if log_names[log_group]['type'] == 'static' %}
+                                <a href="/{{ log_group_id }}/{{ lfn }}" class="pl-2" target="_blank">
+                                    {{ lfn }}
+                                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </div>
                 {% endfor %}
+
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -294,38 +412,49 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
+                {% for log_group in log_names.keys() %}
+                    {% set log_group_id = log_group | replace(' ', '-') | lower %}
+                    <div id="{{ log_group_id }}-body">
+                        {% if log_names[log_group]['type'] == 'dynamic' %}
+                            <h4><a href="#menu-toggle" id="menu-toggle">
+                                <i class="fa fa-bars p-1 py-2" aria-hidden="true"></i></a>
+                                {{ log_group }}
+                            </h4>
 
-                <h3><a href="#menu-toggle" id="menu-toggle">
-                    <i class="fa fa-bars p-1 py-2" aria-hidden="true"></i></a>
-                    Log files from last night
-                </h3>
-
-                <!-- Iterate over log files -->
-                {% for lfn in log_names_last_night %}
-                <div class="row mb-2" id="{{ lfn }}-container" style="display: none;">
-                    <div class="col">
-                        <div class="card border border-info" id="{{ lfn }}-card">
-                            <div class="card-header p-0 pl-2 bg-info" id="">
-                                <span style="font-weight: 400; font-size: 0.9rem;">{{ lfn }}</span>
-                                <a class="float-right pr-2 pb-0 mb-0" data-toggle="collapse" href="#"
-                                   aria-expanded="false" aria-controls="collapseExample" id="{{ lfn }}-dropdown"
-                                   onClick="showHidePanel('{{ lfn }}')" style="margin-top: -0.1rem;">
-                                    <i class="fa fa-lg fa-angle-up" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                            <div class="card-body text-truncate p-0 pl-2 pr-2" id="{{ lfn }}-panel"
-                                 style="max-height:15rem; display: inline-block; overflow: auto;">
-
-                                <pre><code id="{{ lfn }}-code" class="empty"></code></pre>
-                            </div>
-                            <div class="card-footer p-0 pl-2 text-muted" id="{{ lfn }}-loading">
-                                    Loading...&nbsp;<i class="fa fa-gear fa-spin" style="font-size: 1rem;"></i>
-                            </div>
-                        </div>
+                            <!-- Iterate over log files -->
+                            {% for lfn in log_names[log_group]['files'] %}
+                                <div class="row mb-2" id="{{ log_group_id }}-{{ lfn }}-container" style="display: none;">
+                                    <div class="col">
+                                        <div class="card border border-info"
+                                             id="{{ log_group_id }}-{{ lfn }}-card">
+                                            <div class="card-header p-0 pl-2 bg-info" id="">
+                                                <span style="font-weight: 400; font-size: 0.9rem;">{{ lfn }}</span>
+                                                <a class="float-right pr-2 pb-0 mb-0" data-toggle="collapse" href="#"
+                                                   aria-expanded="false" aria-controls="collapseExample"
+                                                   id="{{ log_group_id }}-{{ lfn }}-dropdown"
+                                                   onClick="showHidePanel('{{ log_group_id }}-{{ lfn }}')"
+                                                   style="margin-top: -0.1rem;">
+                                                    <i class="fa fa-lg fa-angle-up" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                            <div class="card-body text-truncate p-0 pl-2 pr-2 resizable"
+                                                 id="{{ log_group_id }}-{{ lfn }}-panel"
+                                                 style="max-height: 500px; height: 100px; display: inline-block;
+                                                 overflow: auto; resize: vertical;">
+                                                <pre><code id="{{ log_group_id }}-{{ lfn }}-code" class="empty"></code></pre>
+                                            </div>
+                                            <!-- TODO: put filter here (text input)? -->
+                                            <!--<div class="card-footer p-0 pl-2 text-muted"-->
+                                            <!--id="{{ log_group_id }}-{{ lfn }}-loading">-->
+                                            <!--Loading...&nbsp;<i class="fa fa-gear fa-spin" style="font-size: 1rem;"></i>-->
+                                            <!--</div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
-                </div>
                 {% endfor %}
-
             </div>
         </div>
         <!-- /#page-content-wrapper -->

@@ -1,5 +1,14 @@
 {
-  "Last night": {
-    "location": "/home/roboao/web/Lastnight/"
+  "Current logs": {
+    "location": "/home/roboao/Logs/",
+    "extensions": ["log"],
+    "type": "dynamic"
+  },
+  "Logs from last night": {
+    "location": "/home/roboao/web/Lastnight/",
+    "extensions": ["log", "dat"],
+    "type": "static"
   }
 }
+
+
