@@ -15,13 +15,6 @@ var fs = require('fs'); // for reading local files
 var nunjucks = require('nunjucks'); // template rendering
 const exec = require('child_process').exec;
 
-// var ncp = require('ncp').ncp;
-// ncp.limit = 8;
-
-// flavicon
-//var favicon = require('serve-favicon');
-//app.use(favicon('public/robot-favicon.png'));
-
 // configure nunjucks
 nunjucks.configure('templates', {
     autoescape: true,
@@ -44,21 +37,6 @@ if (process.argv.length > 2) {
     }
 }
 var config = require(config_file);
-
-// get/parse logs.json
-var logs_config_file = './logs.json';  // default to try out
-// or if specified by user as command line option:
-if (process.argv.length > 3) {
-    if (process.argv[3][0] != '/' && process.argv[3][0] != '.') {
-        logs_config_file = './' + process.argv[3];
-    }
-    else {
-        logs_config_file = process.argv[3]
-    }
-}
-
-// read in the config file for logs
-var logs_config = require(logs_config_file);
 
 // get log file names for rendering the log page at init
 function logNames(logs_config) {
@@ -94,10 +72,10 @@ function logNames(logs_config) {
 }
 
 // serve 'static' log files:
-for (var key in logs_config) {
-    if (logs_config.hasOwnProperty(key)) {
-        if (logs_config[key]['type'] == 'static') {
-            app.use('/' + key.replace(/\s+/g, '-').toLowerCase(), express.static(logs_config[key]['location']));
+for (var key in config["logs"]) {
+    if (config["logs"].hasOwnProperty(key)) {
+        if (config["logs"][key]['type'] == 'static') {
+            app.use('/' + key.replace(/\s+/g, '-').toLowerCase(), express.static(config["logs"][key]['location']));
             // console.log();
         }
     }
@@ -105,13 +83,13 @@ for (var key in logs_config) {
 
 // serve 'dynamic' log files:
 var watchers = {};
-for (var key in logs_config) {
-    if (logs_config.hasOwnProperty(key)) {
-        if (logs_config[key]['type'] == 'dynamic') {
+for (var key in config["logs"]) {
+    if (config["logs"].hasOwnProperty(key)) {
+        if (config["logs"][key]['type'] == 'dynamic') {
             // wildcards to watch over:
             var wildcards = [];
-            for (var i = 0; i < logs_config[key]['extensions'].length; i++) {
-                wildcards.push(logs_config[key]['location'] + '*.' + logs_config[key]['extensions'][i]);
+            for (var i = 0; i < config["logs"][key]['extensions'].length; i++) {
+                wildcards.push(config["logs"][key]['location'] + '*.' + config["logs"][key]['extensions'][i]);
             }
             // Initialize watcher
             // console.log(wildcards);
@@ -123,7 +101,7 @@ for (var key in logs_config) {
         }
     }
 }
-// Add event listeners. see https://github.com/paulmillr/chokidar for examples
+// Add event listeners for dynamic logs. see https://github.com/paulmillr/chokidar for examples
 // io.on('connection', function(socket) {
     var dynamic_logs = {};
     for (var key in watchers) {
@@ -181,14 +159,6 @@ for (var key in logs_config) {
         }
     }
 // });
-
-// load log file from disk on request:
-io.on('connection', function(socket) {
-    ss(socket).on('get_log_file_last_night', function(stream, data) {
-        // console.log(data.file_name);
-        fs.createReadStream(logs_last_night['Last night']['location'] + data.file_name).pipe(stream);
-    });
-});
 
 // build a skeleton to make index.html from a template
 function skeleton(config) {
@@ -359,78 +329,60 @@ function fetch(config) {
         catch(err) {
             // no money - no honey
             //console.log(err);
-            continue;
         }
 
     }
 
-    //console.log(data);
-    //console.log(data['ADC']['globals']['Updating']);
-    //console.log(data['ADC']['globals']['Time stamp']);
-
     return data;
 }
+
 
 // run status page
 app.get('/', function(req, res){
     // make skeleton:
-    var skelet = skeleton(config);
-    //console.log(skelet);
-    // create html from a template and send it to user:
+    var skelet = skeleton(config['status']);
+    // console.log(skelet);
     //res.sendFile('/Users/dmitryduev/web/sserv-njs/templates/index.html');
-    res.render('status.html', {skelet: skelet});
+    // create html from a template and send it to user:
+    // console.log(config['external_links']);
+    res.render('status.html', {logo: config['settings']['logo'], skelet: skelet,
+                               external_links: config['external_links']});
 });
 
 // run image page
 app.get('/image', function(req, res){
-    res.render('image.html');
+    res.render('image.html', {logo: config['settings']['logo'], external_links: config['external_links']});
 });
 
 // run log page
 app.get('/log', function(req, res){
     // get file names:
-    var log_names = logNames(logs_config);
+    var log_names = logNames(config['logs']);
     // console.log(log_names);
-    // TODO: move all configs to one file, make things customizable!
-    res.render('log.html', {log_names: log_names, max_log_lines: 500});
+    res.render('log.html', {logo: config['settings']['logo'],
+                            log_names: log_names, max_log_lines: config['settings']['max_dynamic_log_lines'],
+                            external_links: config['external_links']});
 });
+
 
 
 // start listening
-http.listen(8080, function(){
-    console.log('listening on *:8080');
+http.listen(config['settings']['port'], function(){
+    console.log('listening on *:' + config['settings']['port']);
 });
 
-
-// Copy telemetry data from NFS to local disk
-// mkdir telemetry if doesn't exist
-// if (!fs.existsSync('telemetry')){
-//     fs.mkdirSync('telemetry');
-// }
-
-// function cpLoop(source, destination) {
-//     ncp(source, destination, function (err) {
-//         if (err) {
-//             return console.error(err);
-//         }
-//         // console.log('done!');
-//     });
-//     setTimeout(function() {cpLoop(source, destination)}, 700);
-// }
-// cpLoop('/Users/dmitryduev/web/sserv/telemetry/', 'telemetry/');
-// cpLoop('/home/roboao/Status/', 'telemetry/');
 
 // Extract and stream telemetry data
 
 // telemetry streaming loop
 function Loop() {
     // extract telemetry:
-    var data = fetch(config);
+    var data = fetch(config['status']);
     //io.emit('telemetry', JSON.stringify(data));
     io.emit('telemetry', data);
     //socket.volatile.emit
     //socket.broadcast.emit
-    setTimeout(function() {Loop()}, 900);
+    setTimeout(function() {Loop()}, config['settings']['telemetry_update_ms']);
 }
 
 Loop();
@@ -438,8 +390,7 @@ Loop();
 // Stream images
 
 // generate png files
-var cmd = '/home/roboao/Work/dima/sserv-njs/lib/png2 /home/roboao/Work/dima/sserv-njs/public /home/roboao/Status';
-// var cmd = 'ls';
+var cmd = config['images']['generate_cmd'];
 
 // telemetry streaming loop
 function LoopImg() {
@@ -450,22 +401,22 @@ function LoopImg() {
         //console.log(stderr);
         //console.log(error);
         if (error == null) {
-            fs.readFile('public/dm.png', function(err, buf){
+            fs.readFile(config['images']['location'] + '/dm.png', function(err, buf){
                 // io.emit('dm', { image: true, buffer: buf.toString('base64') });
                 io.emit('dm', { image: true, buffer: buf });
             });
-            fs.readFile('public/wfs.png', function(err, buf){
+            fs.readFile(config['images']['location'] + '/wfs.png', function(err, buf){
                 // io.emit('wfs', { image: true, buffer: buf.toString('base64') });
                 io.emit('wfs', { image: true, buffer: buf });
             });
-            fs.readFile('public/vicd.png', function(err, buf){
+            fs.readFile(config['images']['location'] + '/vicd.png', function(err, buf){
                 // io.emit('vicd', { image: true, buffer: buf.toString('base64') });
                 io.emit('vicd', { image: true, buffer: buf });
                 // console.log('sent!')
             });
         }
     });
-    setTimeout(function() {LoopImg()}, 900);
+    setTimeout(function() {LoopImg()}, config['settings']['images_update_ms']);
 }
 
 LoopImg();
