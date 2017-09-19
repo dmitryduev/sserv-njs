@@ -1,9 +1,9 @@
-## System monitoring interface with node.js/socket.io-based back-end and bootstrap v4-based front-end for Robo-AO. 
+### System monitoring interface with node.js/socket.io-based back-end and bootstrap v4-based front-end for Robo-AO. 
 
-Here's how to deploy it:
+#### Deployment
 
 - Install node.js and npm if not in the system. The code now uses socket.io v2, which in turn requires a fairly
-recent version of node.js (>4). In case that is not available on your system with the package manager, install 
+recent version of node.js (>4). In case that is not available on your system with the default package manager, install 
 node.js manually. For example, on Fedora 21:
 ```bash
 # remove old nodejs version:
@@ -19,19 +19,16 @@ yum install -y nodejs
 npm install pm2 -g
 ```
 
-- Clone the repository:
+- Clone the repository and install node.js app dependencies:
 
 ```bash
 git clone https://github.com/dmitryduev/sserv-njs.git
-```
-
-- cd to the cloned directory and install node.js app dependencies:
-
-```bash
+cd sserv-njs
 npm install
 ```
 
-- Edit config.json - change paths to telemetry files (could be both abs and rel) and description of their content
+- Edit config.json - change settings including those for logs and telemetry files 
+(paths could be both abs and rel) and description of their content
 
 - Run the server as a daemon (from the cloned directory!):
 
@@ -39,7 +36,7 @@ npm install
 pm2 start server_status.js -- config.json
 ```
 
-The server will run on port 8080. To change goto line 232 in _server_status.js_
+By default, the server will run on port 8080. That could be changed in _config.json_.
 
 - To monitor performance:
 
@@ -65,7 +62,9 @@ It will save the process list with the corresponding environments into the dump 
 
 For more details go [here](http://pm2.keymetrics.io/docs/usage/startup/#saving-current-process-list)
 
-**Description of the config.json file format**
+#### Description of config.json
+
+##### The "status" section 
 
 Each defined "system" may have "global" parameters and "subsystems" with their own parameters. 
 The only mandatory parameter is "data-file", which points to the telemetry file. 
@@ -115,4 +114,9 @@ or local time ("local")
 4th arg - controls if the whole panel should turn red/yellow if this param turns red/yellow
 
 
-Refer to the provided config.json for examples
+Refer to the provided config.json for examples.
+
+##### The "log" section
+
+The user can choose to display the logs either "dynamically" or "statically". In the first case, new entries (lines) in 
+log files from a directory will be streamed to the browser. In the second case, log files will simply be open in a new tab.
