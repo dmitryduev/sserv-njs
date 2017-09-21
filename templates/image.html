@@ -41,9 +41,6 @@
 
     <!-- Switch button -->
     <script>
-        var vicd_toggle = true;
-        var get_offset_toggle = false;
-
         $(document).ready(function() {
             $('.btn-toggle').click(function () {
                 $(this).find('.btn').toggleClass('active');
@@ -63,21 +60,6 @@
 
                 $(this).find('.btn').toggleClass('btn-outline-secondary');
 
-                // toggle IR cam FoV + FoV center
-                if ($('#ir-fov-on').hasClass( "active" )) {
-                    vicd_toggle = true;
-                }
-                else {
-                    vicd_toggle = false;
-                }
-
-                // toggle generating offset command
-                if ($('#get-offset-on').hasClass( "active" )) {
-                    get_offset_toggle = true;
-                }
-                else {
-                    get_offset_toggle = false;
-                }
             });
         });
     </script>
@@ -176,7 +158,7 @@
 //                ctx_vicd.drawImage(img_vicd, 0, 0);
                 ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
 
-                if (vicd_toggle) {
+                if ($('#ir-fov-on').hasClass( "active" )) {
                     // IR camera box
                     ctx_vicd.beginPath();
                     ctx_vicd.strokeStyle = "#ffffff";
@@ -270,7 +252,7 @@
 
             // get offset
             document.getElementById('canvas-vicd').addEventListener('click', function(evt) {
-                if (get_offset_toggle) {
+                if ($('#get-offset-on').hasClass( "active" )) {
                     var mousePos = get_offset(document.getElementById('canvas-vicd'), evt);
                     // show modal
                     $('#offset-modal').modal('show');
