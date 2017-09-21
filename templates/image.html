@@ -260,7 +260,7 @@
                     document.getElementById('tx-offset-code').innerHTML = 'Offsets from FoV center in arcsec: ' +
                         mousePos.x.toFixed(1) + ' ' + mousePos.y.toFixed(1);
                     document.getElementById('tx-offset-code').innerHTML += '<br><br>tx offset ' +
-                        (-mousePos.x / 3600).toFixed(6) + ' ' + (mousePos.y  / 3600).toFixed(6);
+                        (mousePos.x / 3600).toFixed(6) + ' ' + (-mousePos.y  / 3600).toFixed(6);
                 }
             }, false);
         });
