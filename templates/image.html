@@ -39,13 +39,50 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
 
-    <!-- Images -->
+    <!-- Switch button -->
     <script>
         var vicd_toggle = true;
-        function canvas_vicd_click() {
-            vicd_toggle = (vicd_toggle != true);
-        }
+        var get_offset_toggle = false;
+
+        $(document).ready(function() {
+            $('.btn-toggle').click(function () {
+                $(this).find('.btn').toggleClass('active');
+
+                if ($(this).find('.btn-primary').length > 0) {
+                    $(this).find('.btn').toggleClass('btn-primary');
+                }
+                if ($(this).find('.btn-danger').length > 0) {
+                    $(this).find('.btn').toggleClass('btn-danger');
+                }
+                if ($(this).find('.btn-success').length > 0) {
+                    $(this).find('.btn').toggleClass('btn-success');
+                }
+                if ($(this).find('.btn-info').length > 0) {
+                    $(this).find('.btn').toggleClass('btn-info');
+                }
+
+                $(this).find('.btn').toggleClass('btn-outline-secondary');
+
+                // toggle IR cam FoV + FoV center
+                if ($('#ir-fov-on').hasClass( "active" )) {
+                    vicd_toggle = true;
+                }
+                else {
+                    vicd_toggle = false;
+                }
+
+                // toggle generating offset command
+                if ($('#get-offset-on').hasClass( "active" )) {
+                    get_offset_toggle = true;
+                }
+                else {
+                    get_offset_toggle = false;
+                }
+            });
+        });
     </script>
+
+    <!-- Images -->
     <script>
 
         $(document).ready(function() {
@@ -201,9 +238,6 @@
                     var base64String = window.btoa(binary);
 
                     img_dm.src = 'data:image/png;base64,' + base64String;
-//                    img_dm.src = 'data:image/jpg;base64,' + info.buffer;
-//                    ctx_dm.clearRect(0, 0, 300, 300);
-//                    ctx_dm.drawImage(img_dm, 0, 0, 300, 300);
                 }
             });
 
@@ -217,9 +251,6 @@
                     var base64String = window.btoa(binary);
 
                     img_wfs.src = 'data:image/png;base64,' + base64String;
-//                    img_wfs.src = 'data:image/jpeg;base64,' + info.buffer;
-//                    ctx_wfs.clearRect(0, 0, 300, 300);
-//                    ctx_wfs.drawImage(img_wfs, 0, 0, 300, 300);
                 }
             });
 
@@ -233,16 +264,35 @@
                     var base64String = window.btoa(binary);
 
                     img_vicd.src = 'data:image/png;base64,' + base64String;
-//                    img_vicd.src = 'data:image/jpeg;base64,' + info.buffer;
-//                    ctx_vicd.clearRect(0, 0, VIC_width, VIC_height);
-//                    ctx_vicd.drawImage(img_vicd, 0, 0, VIC_width, VIC_height);
-//                    ctx_vicd.drawImage(img_vicd, 0, 0, 300, 300);
-//                    console.log(base64String.substring(0,100));
 
                 }
             });
 
+            // get offset
+            document.getElementById('canvas-vicd').addEventListener('click', function(evt) {
+                if (get_offset_toggle) {
+                    var mousePos = get_offset(document.getElementById('canvas-vicd'), evt);
+                    // show modal
+                    $('#offset-modal').modal('show');
+                    // populate offsets
+                    document.getElementById('tx-offset-code').innerHTML = 'Offsets in arcsec: ' +
+                        mousePos.x.toFixed(1) + ' ' + mousePos.y.toFixed(1);
+                    document.getElementById('tx-offset-code').innerHTML += '<br><br>tx offset ' +
+                        (mousePos.x / 3600).toFixed(6) + ' ' + (mousePos.y  / 3600).toFixed(6);
+                }
+            }, false);
         });
+
+        function get_offset(canvas, evt) {
+            var rect = canvas.getBoundingClientRect();
+            var w =  canvas.getContext('2d').canvas.width;
+            var h =  canvas.getContext('2d').canvas.height;
+            return {
+                x: (evt.clientX - rect.left -  w/2) / w * 36,
+                y: (evt.clientY - rect.top - h/2) / h * 36
+            };
+        }
+
     </script>
 
 </head>
@@ -280,14 +330,24 @@
 <div class="container-fluid">
     <div class="template">
         <div class="row justify-content-md-center">
-
+            <div class="col-lg-1 col-md-12">
+                <label class="form-control-label" for="ir-fov">IR FoV</label>
+                <div class="btn-group btn-toggle mb-2" role="group" id="ir-fov">
+                    <button type="button" class="btn btn-sm btn-success active" id="ir-fov-on">ON</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">OFF</button>
+                </div>
+                <label class="form-control-label" for="get-offset">Get offset</label>
+                <div class="btn-group btn-toggle mb-2" role="group" id="get-offset">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="get-offset-on">ON</button>
+                    <button type="button" class="btn btn-sm btn-success active">OFF</button>
+                </div>
+            </div>
             <div class="col-lg-4 col-md-12">
                 <canvas id="canvas-dm" class="p-0 m-0"></canvas>
                 <canvas id="canvas-wfs" class="p-0 m-0"></canvas>
             </div>
             <div class="col-lg-auto col-md-12">
-                <canvas id="canvas-vicd" onclick="canvas_vicd_click()"
-                        class="p-0 m-0"></canvas>
+                <canvas id="canvas-vicd" class="p-0 m-0"></canvas>
             </div>
             <br><br>
 
@@ -295,6 +355,15 @@
     </div>
 
 </div><!-- /.container -->
+
+<div class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="modal-label" aria-hidden="true" id="offset-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <code id="tx-offset-code"></code>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
