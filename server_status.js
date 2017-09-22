@@ -346,12 +346,15 @@ app.get('/', function(req, res){
     // create html from a template and send it to user:
     // console.log(config['external_links']);
     res.render('status.html', {logo: config['settings']['logo'], skelet: skelet,
+                               logo_font_family: config['settings']['logo-font-family'],
                                external_links: config['external_links']});
 });
 
 // run image page
 app.get('/image', function(req, res){
-    res.render('image.html', {logo: config['settings']['logo'], external_links: config['external_links']});
+    res.render('image.html', {logo: config['settings']['logo'],
+                              logo_font_family: config['settings']['logo-font-family'],
+                              external_links: config['external_links']});
 });
 
 // run log page
@@ -360,6 +363,7 @@ app.get('/log', function(req, res){
     var log_names = logNames(config['logs']);
     // console.log(log_names);
     res.render('log.html', {logo: config['settings']['logo'],
+                            logo_font_family: config['settings']['logo-font-family'],
                             log_names: log_names, max_log_lines: config['settings']['max_dynamic_log_lines'],
                             external_links: config['external_links']});
 });

@@ -1,6 +1,7 @@
 {
   "settings": {
     "logo": "Robo-AO",
+    "logo-font-family": "Akashi",
     "port": 8080,
     "telemetry_update_ms": 900,
     "images_update_ms": 900,
