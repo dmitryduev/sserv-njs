@@ -85,7 +85,7 @@
         "Secondary Refocus, nm": [[21], {"success": [[-0.25, 0.25]], "danger": [[-5, -0.5, 0.5, 5]], "warning": [[-0.5, -0.25], [0.25, 0.5]]}, [true, 600, "UTC"], false]
       },
       "Average Intensity": {
-        "Intensity": [[20], {"success": [[100, 10000]], "danger": [[0, 75]], "warning": [[75, 100]]}, [false], true]
+        "Intensity": [[20], {"success": [[100, 10000]], "danger": [[0, 75]], "warning": [[75, 100]]}, [true, 600, "UTC"], true]
       },
       "Deformable Mirror": {
         "Min value": [[14], {"success": [[1000, 44000]], "danger": [[0, 100], [44900, 45000]], "warning": [[100, 1000], [44000, 44900]]}, [false], false],
