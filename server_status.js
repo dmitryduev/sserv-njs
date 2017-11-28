@@ -9,11 +9,22 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var ss = require('socket.io-stream');
+// var ss = require('socket.io-stream');
+var crypto = require('crypto');
 var chokidar = require('chokidar');
 var fs = require('fs'); // for reading local files
 var nunjucks = require('nunjucks'); // template rendering
 const exec = require('child_process').exec;
+var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
+
+// Body parser
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
+app.use(bodyParser.json()); // parse application/json
+
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 // configure nunjucks
 nunjucks.configure('templates', {
@@ -37,6 +48,45 @@ if (process.argv.length > 2) {
     }
 }
 var config = require(config_file);
+
+// compute checksum
+function checksum(str, algorithm, encoding) {
+    return crypto
+        .createHash(algorithm || 'md5')
+        .update(str, 'utf8')
+        .digest(encoding || 'hex')
+}
+
+// manage authentication
+passport.serializeUser(function(user, done) {
+    // console.log(user);
+    done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+    // console.log(user);
+    done(null, user);
+});
+
+// passport.deserializeUser(function(id, done) {
+//     User.findById(id, function (err, user) {
+//         done(err, user);
+//     });
+// });
+
+passport.use(new LocalStrategy(
+    function(username, password, done) {
+        // console.log(username, password, 'ebta');
+            if (!(username in config["auth"])) {
+                done(null, false, { message: 'Incorrect username.' });
+            }
+            if (config["auth"][username] != checksum(password, 'sha1')) {
+                done(null, false, { message: 'Incorrect password.' });
+            }
+        // console.log(username, password, 'ebta');
+        done(null, username);
+    }
+));
 
 // get log file names for rendering the log page at init
 function logNames(logs_config) {
@@ -336,38 +386,112 @@ function fetch(config) {
     return data;
 }
 
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(require('express-session')({ secret: 'keyboardcat', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// authentication
+app.get('/login',
+    function(req, res){
+        res.render('login.html', {logo: config['settings']['logo'],
+                                  logo_font_family: config['settings']['logo-font-family'],
+                                  external_links: config['external_links']});
+    });
+
+app.post('/login',
+    passport.authenticate('local', { successReturnToOrRedirect: '/', failureRedirect: '/login' }),
+    function(req, res) {
+        // console.log(req.body);
+        res.redirect('/');
+    });
+
+app.get('/logout',
+    function(req, res){
+        req.logout();
+        res.redirect('/login');
+    });
+
 
 // run status page
-app.get('/', function(req, res){
-    // make skeleton:
-    var skelet = skeleton(config['status']);
-    // console.log(skelet);
-    //res.sendFile('/Users/dmitryduev/web/sserv-njs/templates/index.html');
-    // create html from a template and send it to user:
-    // console.log(config['external_links']);
-    res.render('status.html', {logo: config['settings']['logo'], skelet: skelet,
-                               logo_font_family: config['settings']['logo-font-family'],
-                               external_links: config['external_links']});
-});
+app.get('/', ensureLoggedIn('/login'),
+    function(req, res) {
+        // console.log(req);
+        // logged in?
+        if (req.user) {
+            // make skeleton:
+            var skelet = skeleton(config['status']);
+            // console.log(skelet);
+            //res.sendFile('/Users/dmitryduev/web/sserv-njs/templates/index.html');
+            // create html from a template and send it to user:
+            // console.log(config['external_links']);
+            res.render('status.html', {
+                logo: config['settings']['logo'], skelet: skelet,
+                logo_font_family: config['settings']['logo-font-family'],
+                external_links: config['external_links']
+            });
+        }
+        else {
+            // not logged in
+            res.redirect('/login');
+        }
+    }
+);
 
 // run image page
-app.get('/image', function(req, res){
-    res.render('image.html', {logo: config['settings']['logo'],
-                              logo_font_family: config['settings']['logo-font-family'],
-                              external_links: config['external_links']});
-});
+app.get('/image',  ensureLoggedIn('/login'),
+    function(req, res){
+        // logged in?
+        if (req.user) {
+            res.render('image.html', {logo: config['settings']['logo'],
+                                      logo_font_family: config['settings']['logo-font-family'],
+                                      external_links: config['external_links']});
+        }
+        else {
+            // not logged in
+            res.redirect('/login');
+        }
+    }
+);
 
 // run log page
-app.get('/log', function(req, res){
-    // get file names:
-    var log_names = logNames(config['logs']);
-    // console.log(log_names);
-    res.render('log.html', {logo: config['settings']['logo'],
-                            logo_font_family: config['settings']['logo-font-family'],
-                            log_names: log_names, max_log_lines: config['settings']['max_dynamic_log_lines'],
-                            external_links: config['external_links']});
-});
+app.get('/log',  ensureLoggedIn('/login'),
+    function(req, res){
+        // logged in?
+        if (req.user) {
+            // get file names:
+            var log_names = logNames(config['logs']);
+            // console.log(log_names);
+            res.render('log.html', {logo: config['settings']['logo'],
+                                    logo_font_family: config['settings']['logo-font-family'],
+                                    log_names: log_names, max_log_lines: config['settings']['max_dynamic_log_lines'],
+                                    external_links: config['external_links']});
+        }
+        else {
+            // not logged in
+            res.redirect('/login');
+        }
+    }
+);
 
+// run system page
+app.get('/system', ensureLoggedIn('/login'),
+    function(req, res){
+    // logged in?
+    if (req.user) {
+        // get file names:
+        // var log_names = logNames(config['logs']);
+        // console.log(log_names);
+        res.render('system.html', {logo: config['settings']['logo'],
+                                logo_font_family: config['settings']['logo-font-family'],
+                                external_links: config['external_links']});
+    }
+    else {
+        // not logged in
+        res.redirect('/login');
+    }
+});
 
 
 // start listening
@@ -396,7 +520,7 @@ Loop();
 // generate png files
 var cmd = config['images']['generate_cmd'];
 
-// telemetry streaming loop
+// image streaming loop
 function LoopImg() {
     // generate png files, then stream 'em
     exec(cmd, function(error, stdout, stderr) {
@@ -424,3 +548,69 @@ function LoopImg() {
 }
 
 LoopImg();
+
+// Listen for commands from the system page
+io.on('connection', function(socket){
+    socket.on('system-cmd', function(cmd){
+        // console.log(cmd);
+        // try to read in stop-file. if not exists, will throw error
+        fs.readFile(config['system']['stop-file'], function(err, data) {
+            if (err) {
+                // if file does not exist -> create
+                if (err.code == 'ENOENT') {
+                    // console.error(err.message);
+                    try {
+                        fs.closeSync(fs.openSync(config['system']['stop-file'], 'w'));
+                        // emit toggled status
+                        // io.emit(cmd, 'on');
+                    }
+                    finally {}
+                }
+                else {
+                    // console.error(err);
+                }
+            }
+            else {
+                // if file exists -> remove
+                try {
+                    fs.unlink(config['system']['stop-file']);
+                    // emit toggled status
+                    // io.emit(cmd, 'off');
+                }
+                finally {}
+            }
+        });
+    });
+});
+
+// stop file monitoring loop
+function LoopStopFile() {
+    // try to read in stop-file. if not exists, will throw error
+    fs.readFile(config['system']['stop-file'], function(err, data) {
+        if (err) {
+            // if file does not exist
+            if (err.code == 'ENOENT') {
+                // console.error(err.message);
+                try {
+                    // emit status
+                    io.emit('halt', 'off');
+                }
+                finally {}
+            }
+            else {
+                // console.error(err);
+            }
+        }
+        else {
+            // if file exists
+            try {
+                // emit status
+                io.emit('halt', 'on');
+            }
+            finally {}
+        }
+    });
+    setTimeout(function() {LoopStopFile()}, config['settings']['stop_file_update_ms']);
+}
+
+LoopStopFile();

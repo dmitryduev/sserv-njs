@@ -5,7 +5,14 @@
     "port": 8080,
     "telemetry_update_ms": 900,
     "images_update_ms": 900,
+    "stop_file_update_ms": 500,
     "max_dynamic_log_lines": 500
+  },
+  "auth": {
+    "roboao": "0e07deece90838a3e11b50956927a2a76a507829"
+  },
+  "system": {
+    "stop-file": "/home/roboao/Status/robod.stop_file"
   },
   "external_links": {
     "Twiki": "http://www.oir.caltech.edu/twiki_oir/bin/viewauth/Palomar/RoboAO/WebHome"

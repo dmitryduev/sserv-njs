@@ -8,10 +8,15 @@
     "url": "https://github.com/dmitryduev/sserv-njs.git"
   },
   "dependencies": {
+    "body-parser": "^1.18.2",
     "chokidar": "^1.7.0",
+    "connect-ensure-login": "^0.1.1",
     "express": "^4.13.3",
+    "express-session": "^1.15.6",
     "ncp": "^2.0.0",
     "nunjucks": "^2.3.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "serve-favicon": "^2.3.0",
     "socket.io": "^2.0.3",
     "socket.io-stream": "^0.9.1"
