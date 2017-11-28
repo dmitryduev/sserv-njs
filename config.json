@@ -12,7 +12,7 @@
     "roboao": "0e07deece90838a3e11b50956927a2a76a507829"
   },
   "system": {
-    "stop-file": "/home/roboao/Status/robod.stop_file"
+    "stop-file": "/home/roboao/Software/Status/robod.stop_file"
   },
   "external_links": {
     "Twiki": "http://www.oir.caltech.edu/twiki_oir/bin/viewauth/Palomar/RoboAO/WebHome"
