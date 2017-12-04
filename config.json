@@ -237,6 +237,14 @@
       "wind_speed, mph": [[13], {"success": [[0, 30]], "danger": [[40, 1e9]], "warning": [[30, 40]]}, [true, 100, "UTC"], true],
       "wind_direction, °": [[14], {}, [true, 100, "UTC"], false],
       "truss_t, °C": [[15], {"info": [[-40, 100]]}, [true, 100, "UTC"], false]
+    },
+    "System status": {
+      "data-file": "/home/roboao/Status/system_status",
+      "Time stamp": [[0, 2], {"success": [[-600, 20]], "danger": [[20, 1e9], [-1e9, -1200]], "warning": [[-1200, -600]]}, [false], true],
+      "Air T, °C": [[2], {"info": [[-40, 100]]}, [true, 100, "UTC"], false],
+      "Dew point, °C": [[3], {}, [true, 100, "UTC"], false],
+      "Humidity, %": [[4], {"success": [[0, 80]], "danger": [[90, 1e9]], "warning": [[80, 90]]}, [true, 100, "UTC"], true],
+      "Split, °C": [[5], {"success": [[3, 80]], "danger": [[-1e9, 2]], "warning": [[2, 3]]}, [true, 100, "UTC"], false]
     }
   }
 }
