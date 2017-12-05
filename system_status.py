@@ -16,7 +16,12 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     # read in config
-    config = json.load(args.config_file)
+
+    with open(args.config_file) as cjson:
+        config = json.load(cjson)
+        # config must not be empty:
+        if len(config) == 0:
+            raise Exception('Failed to load config file')
 
     while 1:
         # construct line with telemetry
