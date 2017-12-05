@@ -242,11 +242,11 @@
       "data-file": "/home/roboao/Status/system_status",
       "Time stamp": [[0, 2], {"success": [[-5, 5]], "danger": [[5, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
       "Total system CPU usage, %": [[2], {}, [true, 600, "UTC"], false],
-      "Total system memory usage, %": [[3], {}, [true, 600, "UTC"], false],
-      "Disk usage": {
-        "/": [[4], {}, [true, 600, "UTC"], false],
-        "/Data": [[5], {}, [true, 600, "UTC"], false],
-        "/Data1": [[6], {}, [true, 600, "UTC"], false],
+      "Total system memory usage, %": [[3], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], false],
+      "Disk usage, %": {
+        "/": [[4], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], false],
+        "/Data": [[5], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], false],
+        "/Data1": [[6], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], false],
         "/Data2": [[7], {}, [true, 600, "UTC"], false],
         "/Data3": [[8], {}, [true, 600, "UTC"], false],
         "/Data4": [[9], {}, [true, 600, "UTC"], false]
