@@ -36,6 +36,12 @@ npm install
 pm2 start server_status.js -- config.json
 ```
 
+- Run the control machine status monitor as a daemon (from the cloned directory!):
+
+```bash
+pm2 start system_status.py --interpreter=/path/to/python -- config.json
+```
+
 By default, the server will run on port 8080. That could be changed in _config.json_.
 
 - To monitor performance:
