@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
             _t = '{:s} {:.1f} {:.1f}\n'.format(_utc_now, _cpu_usage, _mem_usage,
                                                _root, _data, _data_1, _data_2, _data_3, _data_4)
-            with open(config['Control machine status']['data-file'], 'w') as _f:
+            with open(config['status']['Control machine status']['data-file'], 'w') as _f:
                 _f.write(_t)
         except Exception as _e:
             print(_e)
