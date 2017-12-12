@@ -124,7 +124,7 @@ def meteo():
             # print(result)
             environment = result
             # append Laser focus position
-            environment.append(laser_focus_position(environment[-1]))
+            environment = environment + (laser_focus_position(environment[-1]),)
 
     finally:
         # disconnect from server
