@@ -236,7 +236,8 @@
       "oil_pad1_t, °C": [[12], {}, [true, 100, "UTC"], false],
       "wind_speed, mph": [[13], {"success": [[0, 30]], "danger": [[40, 1e9]], "warning": [[30, 40]]}, [true, 100, "UTC"], true],
       "wind_direction, °": [[14], {}, [true, 100, "UTC"], false],
-      "truss_t, °C": [[15], {"info": [[-40, 100]]}, [true, 100, "UTC"], false]
+      "truss_t, °C": [[15], {"info": [[-40, 100]]}, [true, 100, "UTC"], false],
+      "LFP, mm": [[16], {}, [true, 100, "UTC"], false]
     },
     "Control machine status": {
       "data-file": "/home/roboao/Status/system_status",
