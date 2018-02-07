@@ -61,14 +61,14 @@
         "State": [[2], {"success": ["ON"], "info": ["OFF"]}, [false], false]
       },
       "Laser": {
-        "P, W": [[5], {"success": [[10, 12]], "danger": [[0, 8]], "warning": [[8, 10]]}, [true, 600, "UTC"], true],
+        "P, W": [[5], {"success": [[10, 12]], "danger": [[0, 8]], "warning": [[8, 10]]}, [true, 600, "UTC"], false],
         "Sleep": [[12], {}, [false], false],
         "Shutter": [[4], {"info": ["CLSD"]}, [false], false],
         "Interlock": [[3], {"success": ["CLSD"], "danger": ["OPEN"]}, [false], false]
       },
       "Chiller": {
-        "T, °C": [[10], {"success": [[9, 12]], "danger": [[-1e9, 9], [15, 1e9]], "warning": [[12, 15]]}, [true, 600, "UTC"], true],
-        "Op, s": [[11], {"success": [[0, 10]], "danger": [[20, 32]], "warning": [[10, 20]]}, [true, 600, "UTC"], true],
+        "T, °C": [[10], {"success": [[9, 12]], "danger": [[-1e9, 9], [16, 1e9]], "warning": [[12, 16]]}, [true, 600, "UTC"], false],
+        "Op, s": [[11], {"success": [[0, 10]], "danger": [[20, 32]], "warning": [[10, 20]]}, [true, 600, "UTC"], false],
         "Flow": [[8], {"success": ["FLOWING"], "danger": ["NO_FLOW"]}, [false], true],
         "Reservoir": [[9], {"success": ["OK"], "danger": ["Error"]}, [false], true]
       }
