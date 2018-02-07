@@ -216,6 +216,10 @@
                                     // check if the current t is not in there already
                                     if (plots[divid][0].length==0 ||
                                         plots[divid][0][plots[divid][0].length-1][0].getTime()!=t.getTime()) {
+                                        // skip -9999, they spoil the plots
+                                        if (x == "-9999") {
+                                            continue;
+                                        }
                                         // save these:
                                         plots[divid][0].push([t, parseFloat(x)]);
                                         // array too long? we're displaying the last N points only
@@ -316,6 +320,10 @@
                                         // check if the current t is not in there already
                                         if (plots[divid][0].length==0 ||
                                             plots[divid][0][plots[divid][0].length-1][0].getTime()!=t.getTime()) {
+                                            // skip -9999, they spoil the plots
+                                            if (x == "-9999") {
+                                                continue;
+                                            }
                                             // save these:
                                             plots[divid][0].push([t, parseFloat(x)]);
                                             // array too long? we're displaying the last N points only
