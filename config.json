@@ -239,7 +239,7 @@
       "Disk usage, %": {
         "/": [[4], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], true],
         "/Data": [[5], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], true],
-        "/Data1": [[6], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], false],
+        "/Data1": [[6], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], true],
         "/Data2": [[7], {}, [true, 600, "UTC"], false],
         "/Data3": [[8], {}, [true, 600, "UTC"], false],
         "/Data4": [[9], {}, [true, 600, "UTC"], false]
