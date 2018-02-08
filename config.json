@@ -213,14 +213,6 @@
         "Woffer": [[34], {}, [false], false]
       }
     },
-    "Dew point data": {
-      "data-file": "/home/roboao/Status/dewpoint_status",
-      "Time stamp": [[0, 2], {"success": [[-600, 20]], "danger": [[20, 1e9], [-1e9, -1200]], "warning": [[-1200, -600]]}, [false], true],
-      "Air T, °C": [[2], {"info": [[-40, 100]]}, [true, 100, "UTC"], false],
-      "Dew point, °C": [[3], {}, [true, 100, "UTC"], false],
-      "Humidity, %": [[4], {"success": [[0, 80]], "danger": [[90, 1e9]], "warning": [[80, 90]]}, [true, 100, "UTC"], true],
-      "Split, °C": [[5], {"success": [[3, 80]], "danger": [[-1e9, 2]], "warning": [[2, 3]]}, [true, 100, "UTC"], false]
-    },
     "Environmental data": {
       "data-file": "/home/roboao/Status/environment_status",
       "Time stamp": [[0, 2], {"success": [[-1000, 20]], "danger": [[20, 1e9], [-1e9, -1200]], "warning": [[-1200, -1000]]}, [false], true],
@@ -243,10 +235,10 @@
       "data-file": "/home/roboao/Status/system_status",
       "Time stamp": [[0, 2], {"success": [[-5, 5]], "danger": [[5, 1e9], [-1e9, -60]], "warning": [[-60, -5]]}, [false], true],
       "Total system CPU usage, %": [[2], {}, [true, 600, "UTC"], false],
-      "Total system memory usage, %": [[3], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], false],
+      "Total system memory usage, %": [[3], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], true],
       "Disk usage, %": {
-        "/": [[4], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], false],
-        "/Data": [[5], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], false],
+        "/": [[4], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], true],
+        "/Data": [[5], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], true],
         "/Data1": [[6], {"success": [[0, 80]], "danger": [[90, 101]], "warning": [[80, 90]]}, [true, 600, "UTC"], false],
         "/Data2": [[7], {}, [true, 600, "UTC"], false],
         "/Data3": [[8], {}, [true, 600, "UTC"], false],
