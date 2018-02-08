@@ -444,8 +444,11 @@ app.get('/image',  ensureLoggedIn('/login'),
     function(req, res){
         // logged in?
         if (req.user) {
+            // make skeleton for status bar:
+            var skelet = skeleton(config['status']);
             res.render('image.html', {logo: config['settings']['logo'],
                                       logo_font_family: config['settings']['logo-font-family'],
+                                      skelet: skelet,
                                       external_links: config['external_links']});
         }
         else {

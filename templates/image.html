@@ -31,6 +31,41 @@
             font-family: Akashi;
             src: url('/static/fonts/akashi.ttf');
         }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            /* Set the fixed height of the footer here */
+            height: 30px;
+            line-height: 30px; /* Vertically center the text there */
+            background-color: #212529;
+        }
+        @media only screen and (max-width: 768px) {
+            .footer  {
+                display:none;
+            }
+        }
+        .bg-danger {
+            color: #fce2e2 !important;
+        }
+        .badge-danger {
+            color: #fce2e2 !important;
+        }
+        .bg-danger>a {
+            color: #fce2e2 !important;
+        }
+        .bg-info {
+            color: #e2e2fc !important;
+        }
+        .bg-info>a {
+            color: #e2e2fc !important;
+        }
+        .bg-success {
+            color: #e2fce2 !important;
+        }
+        .bg-success>a {
+            color: #e2fce2 !important;
+        }
     </style>
 
     <!-- Bootstrap core JavaScript
@@ -254,6 +289,83 @@
                 }
             });
 
+            // status bar
+            socket.on('telemetry', function(msg) {
+                // parse json data
+                //var data = JSON.parse(msg);
+                var data = msg;
+                // loop through key=systems:
+                for (var key in data) {
+                    // by default, the panel face is painted gray.
+                    // this changes if any of the params is "critical" and colored
+                    var panel_color = "secondary";
+                    //document.write(key+'\n');
+                    if (data.hasOwnProperty(key)) {
+                        // make sure the panel is displayed:
+                        //document.getElementById(key).style.display = "block";
+                        // global params
+                        for (var key2 in data[key]["globals"]) {
+                            if (data[key]["globals"].hasOwnProperty(key2)) {
+
+                                // colorize panel face if param is critical
+                                if (data[key]["globals"][key2][5]) { // critical?
+                                    switch (panel_color) {
+                                        case "secondary":
+                                            panel_color = data[key]["globals"][key2][1];
+                                            break;
+                                        case "success":
+                                            if (data[key]["globals"][key2][1]=="danger" ||
+                                                data[key]["globals"][key2][1]=="warning") {
+                                                panel_color = data[key]["globals"][key2][1];
+                                            }
+                                            break;
+                                        case "warning":
+                                            if (data[key]["globals"][key2][1]=="danger") {
+                                                panel_color = data[key]["globals"][key2][1];
+                                            }
+                                            break;
+                                        case "danger":
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                        // "sub-systems"
+                        for (var key2 in data[key]["subs"]) {
+                            if (data[key]["subs"].hasOwnProperty(key2)) {
+                                //document.write(key2);
+                                for (var key3 in data[key]["subs"][key2]) {
+
+                                    // colorize panel face if param is critical
+                                    if (data[key]["subs"][key2][key3][5]) { // critical?
+                                        switch (panel_color) {
+                                            case "secondary":
+                                                panel_color = data[key]["subs"][key2][key3][1];
+                                                break;
+                                            case "success":
+                                                if (data[key]["subs"][key2][key3][1]=="danger" ||
+                                                    data[key]["subs"][key2][key3][1]=="warning") {
+                                                    panel_color = data[key]["subs"][key2][key3][1];
+                                                }
+                                                break;
+                                            case "warning":
+                                                if (data[key]["subs"][key2][key3][1]=="danger") {
+                                                    panel_color = data[key]["subs"][key2][key3][1];
+                                                }
+                                                break;
+                                            case "danger":
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // colorize label
+                        document.getElementById(key + "-label").className = "badge badge-" + panel_color;
+                    }
+                }
+            });
+
             // get offset
             document.getElementById('canvas-vicd').addEventListener('click', function(evt) {
                 if ($('#get-offset-on').hasClass( "active" )) {
@@ -359,6 +471,15 @@
         </div>
     </div>
 </div>
+
+<footer class="footer">
+    <div class="container-fluid">
+        {% for system, item in skelet %}
+        <span class="badge badge-light" id="{{ system }}-label"
+              style="font-size: 0.7rem; font-weight:200; cursor:pointer;">{{system}}</span>&nbsp;
+        {% endfor %}
+    </div>
+</footer>
 
 </body>
 </html>
