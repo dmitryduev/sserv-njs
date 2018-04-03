@@ -106,7 +106,7 @@ def meteo():
             cursor.execute(sql)
             result = cursor.fetchone()
             # result: air dew hum split
-            print(result)
+            # print(result)
             dewpoint = result
 
             if False:
