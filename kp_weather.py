@@ -66,8 +66,13 @@ def meteo():
         with db.cursor() as cursor:
 
             if False:
+                cursor.execute("SHOW TABLES")
+                tables = cursor.fetchall()
+                print(tables)
+
+            if False:
                 # display column names:
-                sql = "SHOW columns FROM dew_points"
+                sql = "SHOW columns FROM 2m_WXstation"
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 # result: air dew hum split
@@ -82,12 +87,26 @@ def meteo():
                 #  ('humidity', 'double', 'YES', '', None, ''),
                 #  ('split', 'float', 'YES', '', None, ''))
 
+                # (('id', 'int(11)', 'NO', 'PRI', None, 'auto_increment'),
+                #  ('date_time', 'datetime', 'YES', '', None, ''),
+                #  ('wind_direction', 'double', 'YES', '', None, ''),
+                #  ('wind_speed', 'double', 'YES', '', None, ''),
+                #  ('humidity', 'double', 'YES', '', None, ''),
+                #  ('bar_pressure', 'double', 'YES', '', None, ''),
+                #  ('air_temp', 'double', 'YES', '', None, ''),
+                #  ('dew_point', 'double', 'YES', '', None, ''),
+                #  ('split', 'double', 'YES', '', None, ''),
+                #  ('gust', 'double', 'YES', '', None, ''),
+                #  ('percent_cloud', 'float', 'YES', '', None, ''),
+                #  ('rain', 'float', 'YES', '', None, ''))
+
+
             # get dew point data
-            sql = "SELECT * FROM dew_points WHERE telescope_id=2 ORDER BY ID DESC LIMIT 10"
+            sql = "SELECT * FROM 2m_WXstation ORDER BY ID DESC LIMIT 10"
             cursor.execute(sql)
             result = cursor.fetchone()
             # result: air dew hum split
-            # print(result)
+            print(result)
             dewpoint = result
 
             if False:
@@ -137,16 +156,18 @@ if __name__ == '__main__':
     try:
         d, e = meteo()
         # d = (16189884, 2, datetime.datetime(2017, 9, 1, 22, 36, 8), 17.6, 14.9, 84.2, 2.7)
+        # d = (7633, datetime.datetime(2018, 4, 2, 23, 50, 42), 257.2, 10.1, 16.2, 787.3, 10.2,
+        #      -14.3, 24.5, 22.2, -2.0, 0.0)
         # e = (6902884, datetime.datetime(2017, 9, 1, 22, 30, 13), 0.0, 21.3, 21.2, 23.0, 22.2,
         #       22.5, 21.4, 21.1, 21.8, 39.9, 29.7, 1.6, 242.0, 23.9)
 
         tz = pytz.timezone('US/Arizona')
 
         if d is not None:
-            tt = tz.localize(d[2], is_dst=None)
+            tt = tz.localize(d[1], is_dst=None)
             with open('/home/roboao/Status/dewpoint_status', 'w') as f:
                 f.write('{:s} '.format(tt.astimezone(pytz.utc).strftime('%Y-%m-%d %H:%M:%S') + '.000') +
-                        '{:.1f} {:.1f} {:.1f} {:.1f}\n'.format(*d[3:]))
+                        '{:.1f} {:.1f} {:.1f} {:.1f} {:.1f} {:.1f} {:.1f} {:.1f} {:.1f} {:.1f}\n'.format(*d[2:]))
 
         if e is not None:
             tt = tz.localize(e[1], is_dst=None)
