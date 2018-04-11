@@ -17,6 +17,9 @@ var nunjucks = require('nunjucks'); // template rendering
 const exec = require('child_process').exec;
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
+// exec commands over ssh
+var ssh_exec = require('ssh-exec');
+
 // Body parser
 var bodyParser = require('body-parser');
 
@@ -585,6 +588,29 @@ io.on('connection', function(socket){
         });
     });
 });
+
+io.on('connection', function(socket) {
+    socket.on('ssh-cmd', function (cmd) {
+        console.log(cmd);
+        ssh_exec('ls -lh', {
+                            user: 'tcs',
+                            host: 'sells.kpno.noao.edu',
+                            port: 22,
+                            password: '2Meeetur'
+                            },
+            function (err, stdout, stderr) {
+                // success? emit status
+                if (err === null) {
+                    io.emit('offset-telescope', 'ok');
+                }
+                else {
+                    io.emit('offset-telescope', 'fail');
+                }
+            }
+        )
+    });
+});
+
 
 // stop file monitoring loop
 function LoopStopFile() {

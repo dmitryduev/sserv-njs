@@ -76,6 +76,8 @@
             crossorigin="anonymous"></script>
     <script src="/static/js/popper.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootbox.min.js"></script>
+    <script src="/static/js/bootstrap-notify.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
 
     <!-- Switch button -->
@@ -373,12 +375,54 @@
                     // show modal
                     $('#offset-modal').modal('show');
                     // populate offsets
-                    document.getElementById('tx-offset-code').innerHTML = 'Offsets from FoV center in arcsec: ' +
+                    document.getElementById('tx-offset-text').innerHTML = 'Offsets from FoV center in arcsec: ' +
                         (-mousePos.x).toFixed(1) + ' ' + (-mousePos.y).toFixed(1);
-                    document.getElementById('tx-offset-code').innerHTML += '<br><br>tx offset ' +
+                    document.getElementById('tx-offset-code').innerHTML = 'tx offset ' +
                         (mousePos.x / 3600).toFixed(6) + ' ' + (-mousePos.y  / 3600).toFixed(6);
                 }
             }, false);
+
+            $('#offsetTelescope').click(function () {
+                bootbox.confirm({
+                    message: "Do you want to offset the telescope?",
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i> Cancel'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> Confirm'
+                        }
+                    },
+                    callback: function (result) {
+                        // console.log('This was logged in the callback: ' + result);
+                        // confirmed? send AJAX request to server:
+                        if (result) {
+                            // console.log('Confirmed');
+                            // window.alert(document.getElementById('tx-offset-code').innerHTML);
+                            // emit halt event on click
+                            socket.emit('ssh-cmd', document.getElementById('tx-offset-code').innerHTML);
+                            // show modal
+                            $('#offset-modal').modal('hide');
+                        }
+                    }
+                });
+            });
+            // listen for halt status
+            socket.on('offset-telescope', function (status) {
+//                console.log(status);
+                if (status === 'ok') {
+                    showFlashingMessage("Info:", 'successfully offsetted telescope', 'success');
+//                    window.alert('Success!');
+//                    document.getElementById('halt-on').setAttribute('class', 'btn btn-lg btn-danger active');
+//                    document.getElementById('halt-off').setAttribute('class', 'btn btn-lg btn-outline-secondary');
+                }
+                else {
+                    showFlashingMessage("Info:", 'failed to offset telescope', 'danger');
+//                    window.alert('Fail :(');
+//                    document.getElementById('halt-off').setAttribute('class', 'btn btn-lg btn-danger active');
+//                    document.getElementById('halt-on').setAttribute('class', 'btn btn-lg btn-outline-secondary');
+                }
+            });
         });
 
         function get_offset(canvas, evt) {
@@ -389,6 +433,28 @@
                 x: (evt.clientX - rect.left -  w/2) / w * 36,
                 y: (evt.clientY - rect.top - h/2) / h * 36
             };
+        }
+
+        function showFlashingMessage(title, message, type) {
+            $.notify({title: title, message: message},
+                {placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+                    type: type,
+                    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert" ' +
+                    'style="max-width:400px; font-size: 0.75rem;">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    '<span data-notify="message">{2}</span>' +
+                    '<div class="progress" data-notify="progressbar">' +
+                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" ' +
+                    'aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                    '</div>'
+                });
         }
 
     </script>
@@ -467,7 +533,13 @@
      aria-labelledby="modal-label" aria-hidden="true" id="offset-modal">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <code id="tx-offset-code"></code>
+            <code id="tx-offset-text" style="color: #111111 !important;"></code>
+            <br>
+            <code id="tx-offset-code" style="color: #111111 !important;"></code>
+            <br>
+            <button type="button" class="btn btn-sm btn-danger" id="offsetTelescope">
+                Offset telescope
+            </button>
         </div>
     </div>
 </div>
